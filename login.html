@@ -1,0 +1,118 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SheGO Login</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    
+    <style>
+        /* --- STYLE FRAME IPHONE (SAMA UNTUK SEMUA PAGE) --- */
+        * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; }
+        body { background-color: #e0e0e0; display: flex; justify-content: center; align-items: center; min-height: 100vh; overflow: hidden; }
+
+        .mockup-wrapper { width: 100%; height: 100vh; display: flex; justify-content: center; align-items: center; }
+        .mockup-container {
+            position: relative; width: 500px; height: 1020px; transform: scale(0.6); transform-origin: center center;
+            background-image: url('mockup-iphone.png'); background-size: contain; background-repeat: no-repeat; background-position: center;
+        }
+        .phone-screen {
+            position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%);
+            width: 440px; height: 956px; border-radius: 55px; overflow: hidden;
+            box-shadow: inset 0 0 20px rgba(0,0,0,0.2);
+        }
+        .dynamic-island {
+            position: absolute; top: 20px; left: 50%; transform: translateX(-50%);
+            width: 126px; height: 37px; background-color: #000; border-radius: 20px; z-index: 9999;
+        }
+
+        /* --- CONTENT PAGE --- */
+        .screen-content {
+            width: 100%; height: 100%; background-color: #ffffff;
+            display: flex; flex-direction: column;
+        }
+
+        .top-section { flex: 1; display: flex; flex-direction: column; align-items: center; justify-content: center; padding: 40px 20px; text-align: center; }
+        .logo { width: 200px; margin-bottom: 20px; object-fit: contain; }
+        .tagline { color: #af094b; font-weight: bold; font-style: italic; font-size: 1.2rem; margin-bottom: 20px; }
+        .promo-text { color: #af094b; font-weight: 500; font-size: 1rem; line-height: 1.4; max-width: 320px; }
+
+        .bottom-sheet {
+            background-color: #af094b; border-top-left-radius: 40px; border-top-right-radius: 40px;
+            padding: 40px 30px; padding-bottom: 60px; width: 100%;
+        }
+        .bottom-sheet h2 { color: white; text-align: center; margin-bottom: 25px; font-size: 1.5rem; font-weight: 800; }
+
+        .phone-input-group { display: flex; background: white; border-radius: 12px; overflow: hidden; margin-bottom: 25px; height: 55px; }
+        .select-wrapper { position: relative; display: flex; align-items: center; background: #f8f8f8; border-right: 1px solid #ddd; }
+        .select-wrapper::after { content: '▼'; font-size: 0.6rem; position: absolute; right: 8px; pointer-events: none; color: #333; }
+        .country-code { border: none; background: transparent; padding: 0 25px 0 15px; font-size: 1.1rem; outline: none; appearance: none; font-weight: 600; }
+        .phone-number { border: none; padding: 10px 15px; font-size: 1.1rem; flex-grow: 1; outline: none; font-weight: 600; }
+
+        .divider { display: flex; align-items: center; color: white; margin-bottom: 25px; font-weight: bold; }
+        .divider::before, .divider::after { content: ""; flex: 1; border-bottom: 1px solid rgba(255, 255, 255, 0.5); }
+        .divider span { padding: 0 10px; }
+
+        .social-btn {
+            background-color: #efc1da; border: none; border-radius: 50px; width: 100%; padding: 15px; margin-bottom: 15px;
+            display: flex; align-items: center; justify-content: center; cursor: pointer; font-weight: 800; font-size: 1rem; color: #000; position: relative;
+        }
+        .social-btn i { font-size: 1.4rem; position: absolute; left: 30px; }
+        .fa-apple { color: black; } .fa-google { color: #DB4437; } .fa-facebook { color: #1877F2; }
+
+        .footer { text-align: center; color: white; margin-top: 20px; font-size: 0.95rem; }
+        .footer a { color: white; text-decoration: none; font-weight: 800; }
+    </style>
+</head>
+<body>
+    <div class="mockup-wrapper">
+        <div class="mockup-container">
+            <div class="phone-screen">
+                <div class="dynamic-island"></div> <div class="screen-content">
+                    <div class="top-section">
+                        <img src="shelogo-login.png" alt="SheGO Logo" class="logo">
+                        <p class="promo-text">New to SheGO? Enjoy 50% off on your first ride-hailing trips!</p>
+                    </div>
+
+                    <div class="bottom-sheet">
+                        <h2>Enter Your Number</h2>
+                        <div class="phone-input-group">
+                            <div class="select-wrapper">
+                                <select class="country-code">
+                                    <option value="+60">🇲🇾 +60</option>
+                                    <option value="+65">🇸🇬 +65</option>
+                                    <option value="+62">🇮🇩 +62</option>
+                                     <option value="+66">🇹🇭 +66</option>
+                                     <option value="+63">🇵🇭 +63</option>
+                                     <option value="+84">🇻🇳 +84</option>
+                                </select>
+                            </div>
+                            <input type="tel" class="phone-number" placeholder="Phone Number">
+                        </div>
+
+                        <div class="divider"><span>OR</span></div>
+
+                        <button class="social-btn" onclick="window.location.href='login-email.html'">
+                            <i class="fab fa-apple"></i> Login with Apple
+                        </button>
+                        <button class="social-btn" onclick="window.location.href='login-email.html'">
+                            <i class="fab fa-google"></i> Login with Google
+                        </button>
+                        <button class="social-btn" onclick="window.location.href='login-email.html'">
+                            <i class="fab fa-facebook"></i> Login with Facebook
+                        </button>
+
+                        <div class="footer">
+                            Don't have an account? <a href="signup.html">SIGN UP</a>
+                        </div>
+
+                        <div class="footer">
+                            Forgot Password? <a href="forgot-password.html">RESET</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+</html>

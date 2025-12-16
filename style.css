@@ -1,0 +1,157 @@
+/* =========================================
+   1. GLOBAL VARIABLES & RESET
+   ========================================= */
+:root {
+    --shego-pink: #af094b;       /* Warna Utama (Pink Gelap) */
+    --shego-light-pink: #efc1da; /* Pink Cair untuk button landing page */
+    --btn-secondary: #D99AC5;    /* Lilac untuk button secondary */
+    --white: #ffffff;
+    --black: #000000;
+    --grey-bg: #f0f0f0;
+    --text-dark: #333;
+}
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: 'Segoe UI', Arial, sans-serif;
+}
+
+/* Default Body Style */
+body {
+    background-color: var(--grey-bg);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-height: 100vh;
+}
+
+/* Bekas Utama Mobile (Frame) */
+.mobile-container, .app-container {
+    width: 100%;
+    max-width: 450px;
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+    position: relative;
+    background-color: var(--white);
+    box-shadow: 0 0 20px rgba(0,0,0,0.1);
+}
+
+/* =========================================
+   2. SHARED COMPONENTS (Digunakan di banyak page)
+   ========================================= */
+
+/* Button Back (Panah Kiri) */
+.back-btn {
+    font-size: 24px;
+    text-decoration: none;
+    cursor: pointer;
+    color: var(--black);
+    position: absolute; /* Supaya dia duduk di penjuru */
+    top: 20px;
+    left: 20px;
+    z-index: 10;
+}
+
+/* Input Fields (Bentuk Pill) */
+.input-group {
+    position: relative;
+    width: 100%;
+    margin-bottom: 15px;
+}
+
+.input-group input {
+    width: 100%;
+    padding: 12px 40px;
+    border-radius: 50px;
+    outline: none;
+    font-size: 14px;
+}
+
+/* Icons dalam Input */
+.input-icon {
+    position: absolute;
+    left: 15px;
+    top: 50%;
+    transform: translateY(-50%);
+    font-size: 16px;
+    color: #555;
+}
+
+.toggle-password {
+    position: absolute;
+    right: 15px;
+    top: 50%;
+    transform: translateY(-50%);
+    cursor: pointer;
+    color: #555;
+}
+
+/* =========================================
+   3. LANDING PAGE (index.html) - PINK PENUH
+   ========================================= */
+/* Tambah class="landing-theme" pada <div class="mobile-container"> di index.html */
+
+.landing-theme {
+    background-color: var(--shego-pink) !important;
+    padding: 20px;
+    justify-content: center;
+    align-items: center;
+}
+
+/* Logo di Landing Page */
+.landing-theme .logo-img {
+    width: 200px;
+    margin-bottom: 20px;
+}
+
+.landing-theme h1, 
+.landing-theme p {
+    color: var(--white);
+    text-align: center;
+}
+
+.landing-theme .promo-text {
+    font-size: 14px;
+    margin-bottom: 30px;
+    font-weight: bold;
+}
+
+/* Input Nombor Telefon */
+.phone-input-group {
+    display: flex;
+    align-items: center;
+    width: 100%;
+    background-color: var(--white);
+    border-radius: 12px;
+    padding: 5px;
+    height: 55px;
+    margin-bottom: 20px;
+}
+
+.country-code {
+    background: transparent;
+    border: none;
+    font-weight: bold;
+    padding: 0 15px;
+    border-right: 1px solid #ddd;
+}
+
+.phone-field {
+    border: none !important;
+    background: transparent !important;
+    flex: 1;
+    padding: 10px;
+    outline: none;
+}
+
+/* Garisan "OR" */
+.divider-container {
+    display: flex;
+    align-items: center;
+    width: 100%;
+    margin: 20px 0;
+}
+.line { flex: 1; height: 1px; background: rgba(255,255,255,0.3); }
