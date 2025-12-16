@@ -1,0 +1,146 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SheGO Splash</title>
+    <style>
+        /* --- 1. Latar Belakang Luar --- */
+        body {
+            background-color: #e0e0e0;
+            margin: 0;
+            padding: 0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            overflow: hidden;
+        }
+
+        /* --- 2. Bekas Mockup iPhone --- */
+        .mockup-wrapper {
+            /* Wrapper ini bertindak sebagai kamera 'zoom' */
+            width: 100%;
+            height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .mockup-container {
+            position: relative;
+            /* Saiz Asal iPhone Pro Max (Besar) */
+            width: 500px; 
+            height: 1020px; 
+            
+            /* INI KUNCI DIA: Kecilkan paparan kepada 0.6 (60%) supaya muat skrin */
+            transform: scale(0.6); 
+            transform-origin: center center;
+
+            /* Gambar Mockup */
+            background-image: url('mockup-iphone.png'); 
+            background-size: contain;
+            background-repeat: no-repeat;
+            background-position: center;
+        }
+
+        /* --- 3. Skrin Dalam Mockup --- */
+        .phone-screen {
+            position: absolute;
+            
+            /* Centerkan skrin dalam frame mockup */
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+
+            /* Saiz resolusi skrin iPhone 17 Pro Max */
+            width: 440px; 
+            height: 956px;
+            
+            border-radius: 55px; 
+            overflow: hidden;
+            /* Shadow dalam untuk nampak depth */
+            box-shadow: inset 0 0 20px rgba(0,0,0,0.2); 
+        }
+
+        /* --- 4. Kandungan Skrin (Pink) --- */
+        .screen-content {
+            width: 100%;
+            height: 100%;
+            background-color: #af094b; /* Pink SheGO */
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            position: relative;
+        }
+
+        /* --- 5. Dynamic Island --- */
+        .dynamic-island {
+            position: absolute;
+            top: 20px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 126px;
+            height: 37px;
+            background-color: #000;
+            border-radius: 20px;
+            z-index: 100;
+        }
+
+        /* --- 6. Logo & Text --- */
+        .app-logo {
+            width: 240px; 
+            height: auto;
+            opacity: 0;
+            animation: appearNormal 1.5s ease-out forwards;
+        }
+
+        @keyframes appearNormal {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .loading-text {
+            color: white;
+            margin-top: 25px;
+            font-size: 1rem;
+            opacity: 0;
+            font-weight: 600;
+            position: absolute;
+            bottom: 80px;
+            animation: appearNormal 1.5s ease-out forwards;
+            animation-delay: 0.5s;
+        }
+
+    </style>
+</head>
+<body>
+
+    <div class="mockup-wrapper">
+        <div class="mockup-container">
+            
+            <div class="phone-screen">
+                <div class="screen-content" onclick="masukApp()">
+                    <div class="dynamic-island"></div>
+                    <img src="shelogo-index.png" alt="SheGO Logo" class="app-logo">
+                    <div class="loading-text">loading...</div>
+                </div>
+            </div>
+
+        </div>
+    </div>
+
+    <script>
+        setTimeout(function() {
+            window.location.href = 'login.html';
+        }, 3000);
+
+        function masukApp() {
+            window.location.href = 'login.html';
+        }
+    </script>
+
+</body>
+</html>
