@@ -1,0 +1,98 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Notifications</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    
+    <style>
+        /* FRAME CSS */
+        * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; }
+        body { background-color: #e0e0e0; display: flex; justify-content: center; align-items: center; min-height: 100vh; overflow: hidden; }
+        .mockup-wrapper { width: 100%; height: 100vh; display: flex; justify-content: center; align-items: center; }
+        .mockup-container { position: relative; width: 500px; height: 1020px; transform: scale(0.6); transform-origin: center center; background-image: url('mockup-iphone.png'); background-size: contain; background-repeat: no-repeat; background-position: center; }
+        .phone-screen { position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); width: 440px; height: 956px; border-radius: 55px; overflow: hidden; box-shadow: inset 0 0 20px rgba(0,0,0,0.2); }
+        .dynamic-island { position: absolute; top: 20px; left: 50%; transform: translateX(-50%); width: 126px; height: 37px; background-color: #000; border-radius: 20px; z-index: 9999; }
+
+        /* CONTENT CSS */
+        .screen-content { width: 100%; height: 100%; background-color: #fff; display: flex; flex-direction: column; }
+        .header { padding: 20px; padding-top: 60px; display: flex; align-items: center; justify-content: center; border-bottom: 1px solid #f0f0f0; }
+        .back-btn { position: absolute; left: 25px; font-size: 1.8rem; color: black; text-decoration: none; cursor: pointer; }
+        .page-title { font-size: 1.5rem; font-weight: 800; color: #af094b; }
+
+        .notif-list { flex-grow: 1; padding: 0; overflow-y: auto; padding-bottom: 100px; }
+        .notif-item { display: flex; align-items: flex-start; padding: 20px; border-bottom: 1px solid #f0f0f0; cursor: pointer; transition: background 0.2s; }
+        .notif-item:hover { background-color: #fff0f5; }
+        .notif-item.unread { background-color: #fdf2f8; } /* Highlight unread */
+        
+        .notif-icon { width: 50px; height: 50px; border-radius: 50%; background-color: #af094b; color: white; display: flex; align-items: center; justify-content: center; font-size: 1.2rem; margin-right: 15px; flex-shrink: 0; }
+        .notif-icon.promo { background-color: #FFD700; color: black; }
+        
+        .notif-content h4 { font-size: 1rem; font-weight: 700; margin-bottom: 5px; color: black; }
+        .notif-content p { font-size: 0.9rem; color: #666; line-height: 1.4; }
+        .notif-time { font-size: 0.75rem; color: #aaa; margin-top: 8px; font-weight: 600; }
+
+        /* BOTTOM NAV */
+        .bottom-nav { position: absolute; bottom: 0; width: 100%; background: #fcebf4; display: flex; justify-content: space-around; padding: 15px 0; border-top-left-radius: 25px; border-top-right-radius: 25px; box-shadow: 0 -2px 10px rgba(0,0,0,0.1); z-index: 2000; }
+        .nav-item { display: flex; flex-direction: column; align-items: center; text-decoration: none; color: #888; font-size: 0.8rem; font-weight: 600; position: relative; width: 20%; }
+        .nav-item i { font-size: 1.5rem; margin-bottom: 5px; }
+        .nav-item.active { color: #af094b; }
+        .nav-item.wallet-item { color: #af094b; margin-top: -35px; }
+        .wallet-circle { background: #af094b; width: 60px; height: 60px; border-radius: 50%; display: flex; align-items: center; justify-content: center; color: white; border: 5px solid white; margin-bottom: 5px; }
+        .badge { position: absolute; top: -5px; right: 15px; background: #af094b; color: white; font-size: 0.7rem; padding: 3px 6px; border-radius: 10px; border: 2px solid white; }
+    </style>
+</head>
+<body>
+    <div class="mockup-wrapper">
+        <div class="mockup-container">
+            <div class="phone-screen">
+                <div class="dynamic-island"></div>
+                <div class="screen-content">
+                    
+                    <div class="header">
+                        <a href="home.html" class="back-btn"><i class="fas fa-arrow-left"></i></a>
+                        <div class="page-title">Notifications</div>
+                    </div>
+
+                    <div class="notif-list">
+                        <div class="notif-item unread">
+                            <div class="notif-icon"><i class="fas fa-check"></i></div>
+                            <div class="notif-content">
+                                <h4>Trip Completed</h4>
+                                <p>You have arrived at KLCC. Thank you for riding with SheGO!</p>
+                                <div class="notif-time">2 mins ago</div>
+                            </div>
+                        </div>
+                        <div class="notif-item unread">
+                            <div class="notif-icon promo"><i class="fas fa-tag"></i></div>
+                            <div class="notif-content">
+                                <h4>50% OFF Promo!</h4>
+                                <p>Use code SHEGO50 for your next ride. Valid until Sunday.</p>
+                                <div class="notif-time">1 hour ago</div>
+                            </div>
+                        </div>
+                        <div class="notif-item">
+                            <div class="notif-icon"><i class="fas fa-wallet"></i></div>
+                            <div class="notif-content">
+                                <h4>Topup Successful</h4>
+                                <p>RM 50.00 has been added to your SheWallet.</p>
+                                <div class="notif-time">Yesterday</div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="bottom-nav">
+                        <a href="home.html" class="nav-item"><i class="fas fa-home"></i>Home</a>
+                        <a href="select-ride.html" class="nav-item"><i class="fas fa-map-marker-alt"></i>Trips</a>
+                        <a href="shewallet.html" class="nav-item wallet-item"><div class="wallet-circle"><i class="fas fa-wallet"></i></div>SheWallet</a>
+                        <a href="notifications.html" class="nav-item active"><i class="fas fa-bell"></i><span class="badge">10</span>Notifications</a>
+                        <a href="profile.html" class="nav-item"><i class="far fa-user-circle"></i>Profile</a>
+                    </div>
+
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+</html>

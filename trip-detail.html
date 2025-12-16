@@ -1,0 +1,102 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Confirm Trip Detail</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
+    
+    <style>
+        /* FRAME CSS */
+        * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; }
+        body { background-color: #e0e0e0; display: flex; justify-content: center; align-items: center; min-height: 100vh; overflow: hidden; }
+        .mockup-wrapper { width: 100%; height: 100vh; display: flex; justify-content: center; align-items: center; }
+        .mockup-container { position: relative; width: 500px; height: 1020px; transform: scale(0.6); transform-origin: center center; background-image: url('mockup-iphone.png'); background-size: contain; background-repeat: no-repeat; background-position: center; }
+        .phone-screen { position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); width: 440px; height: 956px; border-radius: 55px; overflow: hidden; box-shadow: inset 0 0 20px rgba(0,0,0,0.2); }
+        .dynamic-island { position: absolute; top: 20px; left: 50%; transform: translateX(-50%); width: 126px; height: 37px; background-color: #000; border-radius: 20px; z-index: 9999; }
+
+        /* CONTENT CSS */
+        .screen-content { width: 100%; height: 100%; background-color: #fff; display: flex; flex-direction: column; }
+        
+        .header { padding: 20px; padding-top: 60px; display: flex; align-items: center; background: white; z-index: 10; box-shadow: 0 2px 5px rgba(0,0,0,0.05); }
+        .back-btn { font-size: 1.8rem; color: black; margin-right: 20px; cursor: pointer; text-decoration: none; margin-left: 10px; }
+        .page-title { font-size: 1.4rem; font-weight: 800; color: black; }
+
+        #map-container { height: 35vh; width: 100%; position: relative; background: #eee; }
+        #map { width: 100%; height: 100%; z-index: 1; }
+        .center-pin-container { position: absolute; top: 50%; left: 50%; transform: translate(-50%, -100%); z-index: 900; pointer-events: none; display: flex; flex-direction: column; align-items: center; }
+        .custom-marker { width: 60px; height: 60px; background: rgba(80, 80, 80, 0.9); border: 2px solid white; border-radius: 50%; display: flex; align-items: center; justify-content: center; color: white; font-size: 1.8rem; margin-bottom: 5px; box-shadow: 0 4px 6px rgba(0,0,0,0.3); }
+        .pin-point { width: 12px; height: 12px; background: #555; border-radius: 50%; }
+
+        .details-section { flex-grow: 1; padding: 30px; background: white; display: flex; flex-direction: column; align-items: center; }
+        .option-btn { width: 100%; padding: 20px; border-radius: 50px; border: 2px solid transparent; background-color: #efc1da; color: black; font-size: 1.1rem; font-weight: 700; margin-bottom: 20px; cursor: pointer; transition: all 0.2s; }
+        .option-btn.active { background-color: white; border-color: #af094b; color: #af094b; box-shadow: 0 0 10px rgba(175, 9, 75, 0.2); }
+
+        .confirm-btn { width: 100%; padding: 22px; border-radius: 50px; border: none; background-color: #af094b; color: white; font-size: 1.2rem; font-weight: 800; cursor: pointer; margin-top: auto; margin-bottom: 100px; box-shadow: 0 4px 10px rgba(0,0,0,0.2); }
+        .confirm-btn:hover { opacity: 0.9; }
+
+        /* NAV */
+        .bottom-nav { position: absolute; bottom: 0; width: 100%; background: #fcebf4; display: flex; justify-content: space-around; padding: 15px 0; border-top-left-radius: 25px; border-top-right-radius: 25px; box-shadow: 0 -2px 10px rgba(0,0,0,0.05); z-index: 2000; }
+        .nav-item { display: flex; flex-direction: column; align-items: center; text-decoration: none; color: #888; font-size: 0.8rem; font-weight: 600; position: relative; width: 20%; }
+        .nav-item i { font-size: 1.5rem; margin-bottom: 5px; }
+        .nav-item.active { color: #af094b; }
+        .nav-item.wallet-item { color: #af094b; margin-top: -35px; }
+        .wallet-circle { background: #af094b; width: 60px; height: 60px; border-radius: 50%; display: flex; align-items: center; justify-content: center; color: white; border: 5px solid white; margin-bottom: 5px; }
+        .badge { position: absolute; top: -5px; right: 15px; background: #af094b; color: white; font-size: 0.7rem; padding: 3px 6px; border-radius: 10px; border: 2px solid white; }
+    </style>
+</head>
+<body>
+    <div class="mockup-wrapper">
+        <div class="mockup-container">
+            <div class="phone-screen">
+                <div class="dynamic-island"></div>
+                <div class="screen-content">
+                    
+                    <div class="header">
+                        <a href="confirm-location.html" class="back-btn"><i class="fas fa-arrow-left"></i></a>
+                        <div class="page-title">Confirm Your Trip Detail</div>
+                    </div>
+
+                    <div id="map-container">
+                        <div id="map"></div>
+                        <div class="center-pin-container">
+                            <div class="custom-marker"><i class="far fa-building"></i></div>
+                            <div class="pin-point"></div>
+                            <div style="background:white; padding:4px 10px; border-radius:10px; font-size:0.9rem; font-weight:bold; margin-top:5px; box-shadow:0 2px 5px rgba(0,0,0,0.2);">Maybank Tower</div>
+                        </div>
+                    </div>
+
+                    <div class="details-section">
+                        <button class="option-btn" onclick="toggleBtn(this)">Pick Up</button>
+                        <button class="option-btn" onclick="toggleBtn(this)">Drop Off</button>
+                        <button class="option-btn" onclick="toggleBtn(this)">Payment Method</button>
+                        <button class="confirm-btn" onclick="window.location.href='select-driver.html'">Confirm & Request Ride</button>
+                    </div>
+
+                    <div class="bottom-nav">
+                        <a href="home.html" class="nav-item"><i class="fas fa-home"></i>Home</a>
+                        <a href="trip-detail.html" class="nav-item active"><i class="fas fa-map-marker-alt"></i>Trips</a>
+                        <a href="shewallet.html" class="nav-item wallet-item"><div class="wallet-circle"><i class="fas fa-wallet"></i></div>SheWallet</a>
+                        <a href="notifications.html" class="nav-item"><i class="fas fa-bell"></i><span class="badge">10</span>Notifications</a>
+                        <a href="profile.html" class="nav-item"><i class="far fa-user-circle"></i>Profile</a>
+                    </div>
+
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+    <script>
+        var map = L.map('map', { zoomControl: false }).setView([3.1475, 101.6995], 16);
+        L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', { attribution: '© OpenStreetMap' }).addTo(map);
+        setTimeout(function(){ map.invalidateSize(); }, 500);
+
+        function toggleBtn(el) {
+            document.querySelectorAll('.option-btn').forEach(btn => btn.classList.remove('active'));
+            el.classList.add('active');
+        }
+    </script>
+</body>
+</html>

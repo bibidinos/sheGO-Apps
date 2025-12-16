@@ -1,0 +1,135 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Select Location</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
+    
+    <style>
+        /* FRAME CSS */
+        * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; }
+        body { background-color: #e0e0e0; display: flex; justify-content: center; align-items: center; min-height: 100vh; overflow: hidden; }
+        .mockup-wrapper { width: 100%; height: 100vh; display: flex; justify-content: center; align-items: center; }
+        .mockup-container { position: relative; width: 500px; height: 1020px; transform: scale(0.6); transform-origin: center center; background-image: url('mockup-iphone.png'); background-size: contain; background-repeat: no-repeat; background-position: center; }
+        .phone-screen { position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); width: 440px; height: 956px; border-radius: 55px; overflow: hidden; box-shadow: inset 0 0 20px rgba(0,0,0,0.2); }
+        .dynamic-island { position: absolute; top: 20px; left: 50%; transform: translateX(-50%); width: 126px; height: 37px; background-color: #000; border-radius: 20px; z-index: 9999; }
+
+        /* CONTENT CSS */
+        .screen-content { width: 100%; height: 100%; background-color: #fff; display: flex; flex-direction: column; position: relative; }
+        
+        #map-container { flex-grow: 1; position: relative; width: 100%; height: 100%; z-index: 1; }
+        #map { width: 100%; height: 100%; background: #ddd; }
+
+        .back-btn { position: absolute; top: 60px; left: 25px; font-size: 1.5rem; color: black; background: white; width: 45px; height: 45px; border-radius: 50%; display: flex; align-items: center; justify-content: center; text-decoration: none; box-shadow: 0 4px 10px rgba(0,0,0,0.15); z-index: 1000; }
+        
+        .search-pill { position: absolute; bottom: 30px; left: 50%; transform: translateX(-50%); width: 90%; background-color: #af094b; border-radius: 50px; padding: 20px 25px; display: flex; align-items: center; box-shadow: 0 4px 15px rgba(0,0,0,0.3); z-index: 1000; }
+        .search-pill i { font-size: 1.4rem; margin-right: 15px; color: white; }
+        .search-input { background: transparent; border: none; color: white; font-size: 1.1rem; font-weight: 600; width: 100%; outline: none; }
+        .search-input::placeholder { color: rgba(255, 255, 255, 0.8); }
+
+        .center-pin-container { position: absolute; top: 50%; left: 50%; transform: translate(-50%, -100%); z-index: 900; pointer-events: none; display: flex; flex-direction: column; align-items: center; }
+        .pin-icon { font-size: 3.5rem; color: #af094b; filter: drop-shadow(0 4px 6px rgba(0,0,0,0.4)); margin-bottom: -5px; }
+        .pin-shadow { width: 15px; height: 5px; background: rgba(0,0,0,0.3); border-radius: 50%; }
+
+        .bottom-panel { background-color: white; padding: 30px 25px; border-top-left-radius: 40px; border-top-right-radius: 40px; box-shadow: 0 -5px 20px rgba(0,0,0,0.1); z-index: 2000; margin-top: -30px; min-height: 400px; }
+        .bottom-panel h2 { text-align: center; font-size: 1.5rem; font-weight: 800; margin-bottom: 25px; color: black; }
+
+        .address-item { display: flex; align-items: center; border: 2px solid #af094b; border-radius: 50px; padding: 12px; margin-bottom: 15px; background: white; cursor: pointer; transition: transform 0.1s; }
+        .address-item.selected { background-color: #fff0f7; border: 2px solid #af094b; }
+        .icon-box { background-color: #af094b; width: 45px; height: 45px; border-radius: 50%; display: flex; align-items: center; justify-content: center; color: white; margin-right: 15px; font-size: 1.3rem; flex-shrink: 0; }
+        .address-info { display: flex; flex-direction: column; overflow: hidden; }
+        .address-label { font-weight: 800; font-size: 1.1rem; color: black; }
+        .address-detail { font-size: 0.9rem; color: #777; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; max-width: 200px; }
+
+        .btn-pinned { width: 100%; padding: 20px; border-radius: 50px; border: none; background-color: #efc1da; font-size: 1.2rem; font-weight: 800; color: black; cursor: pointer; margin-top: 15px; }
+        .btn-pinned:hover { opacity: 0.9; }
+    </style>
+</head>
+<body>
+    <div class="mockup-wrapper">
+        <div class="mockup-container">
+            <div class="phone-screen">
+                <div class="dynamic-island"></div>
+                <div class="screen-content">
+                    
+                    <div id="map-container">
+                        <div id="map"></div>
+                        <a href="login-email.html" class="back-btn"><i class="fas fa-arrow-left"></i></a>
+                        <div class="center-pin-container">
+                            <i class="fas fa-map-marker-alt pin-icon"></i>
+                            <div class="pin-shadow"></div>
+                        </div>
+                        <div class="search-pill">
+                            <i class="fas fa-search" onclick="triggerSearch()"></i>
+                            <input type="text" id="searchInput" class="search-input" placeholder="Search location (e.g. Pavilion)...">
+                        </div>
+                    </div>
+
+                    <div class="bottom-panel">
+                        <h2>My Address</h2>
+                        <div class="address-item" onclick="selectType('Home', this)" id="btn-Home">
+                            <div class="icon-box"><i class="fas fa-home"></i></div>
+                            <div class="address-info"><span class="address-label">Home</span><span class="address-detail" id="detail-Home">Set location...</span></div>
+                        </div>
+                        <div class="address-item" onclick="selectType('Office', this)" id="btn-Office">
+                            <div class="icon-box"><i class="fas fa-briefcase"></i></div>
+                            <div class="address-info"><span class="address-label">Office</span><span class="address-detail" id="detail-Office">Set location...</span></div>
+                        </div>
+                        <div class="address-item" onclick="selectType('Others', this)" id="btn-Others">
+                            <div class="icon-box"><i class="fas fa-ellipsis-h"></i></div>
+                            <div class="address-info"><span class="address-label">Others</span><span class="address-detail" id="detail-Others">Set location...</span></div>
+                        </div>
+                        <button class="btn-pinned" onclick="saveLocation()">Pinned Your Address</button>
+                    </div>
+
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+    <script>
+        var map = L.map('map', { zoomControl: false }).setView([3.1478, 101.713], 15);
+        L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', { attribution: '© OpenStreetMap' }).addTo(map);
+        setTimeout(function(){ map.invalidateSize(); }, 500);
+
+        let selectedType = null;
+        let currentSearchName = "Unknown Location";
+        const searchInput = document.getElementById('searchInput');
+        searchInput.addEventListener("keypress", function(e) { if (e.key === "Enter") triggerSearch(); });
+
+        function triggerSearch() {
+            const query = searchInput.value; if (!query) return;
+            fetch(`https://nominatim.openstreetmap.org/search?format=json&q=${query}&limit=1`)
+                .then(r => r.json()).then(data => {
+                    if (data.length > 0) {
+                        currentSearchName = data[0].display_name.split(',')[0];
+                        map.flyTo([data[0].lat, data[0].lon], 16);
+                        searchInput.blur(); 
+                    } else { alert("Location not found!"); }
+                });
+        }
+
+        function selectType(type, element) {
+            document.querySelectorAll('.address-item').forEach(item => item.classList.remove('selected'));
+            element.classList.add('selected');
+            selectedType = type;
+        }
+
+        function saveLocation() {
+            if (!selectedType) { alert("Please select Home, Office, or Others first!"); return; }
+            if (!searchInput.value && currentSearchName === "Unknown Location") { currentSearchName = "Pinned Location"; }
+            
+            const detailText = document.getElementById(`detail-${selectedType}`);
+            detailText.textContent = currentSearchName;
+            detailText.style.color = "#af094b"; 
+            detailText.style.fontWeight = "bold";
+
+            alert(`Location saved to ${selectedType}. Redirecting to Home...`);
+            setTimeout(function() { window.location.href = 'home.html'; }, 500);
+        }
+    </script>
+</body>
+</html>

@@ -1,0 +1,104 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SheGO Sign Up</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    
+    <style>
+        /* FRAME CSS */
+        * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; }
+        body { background-color: #e0e0e0; display: flex; justify-content: center; align-items: center; min-height: 100vh; overflow: hidden; }
+        .mockup-wrapper { width: 100%; height: 100vh; display: flex; justify-content: center; align-items: center; }
+        .mockup-container { position: relative; width: 500px; height: 1020px; transform: scale(0.6); transform-origin: center center; background-image: url('mockup-iphone.png'); background-size: contain; background-repeat: no-repeat; background-position: center; }
+        .phone-screen { position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); width: 440px; height: 956px; border-radius: 55px; overflow: hidden; box-shadow: inset 0 0 20px rgba(0,0,0,0.2); }
+        .dynamic-island { position: absolute; top: 20px; left: 50%; transform: translateX(-50%); width: 126px; height: 37px; background-color: #000; border-radius: 20px; z-index: 9999; }
+
+        /* CONTENT CSS */
+        .screen-content { width: 100%; height: 100%; background-color: #fff; display: flex; flex-direction: column; padding: 20px 25px; overflow-y: auto; }
+        .header { margin-top: 50px; margin-bottom: 20px; }
+        .back-btn { font-size: 1.8rem; color: black; text-decoration: none; cursor: pointer; }
+        .title-section { text-align: center; margin-bottom: 30px; }
+        h1 { font-size: 2rem; font-weight: 800; color: #000; margin-bottom: 10px; }
+        h2 { font-size: 1.3rem; font-weight: 700; color: #000; }
+
+        .input-group { position: relative; margin-bottom: 20px; display: flex; align-items: center; border: 2px solid #888; border-radius: 50px; padding: 15px 20px; background: white; }
+        .input-group i.icon-left { font-size: 1.2rem; color: #000; width: 30px; text-align: center; }
+        .input-group input { border: none; outline: none; flex-grow: 1; padding: 0 15px; font-size: 1rem; font-weight: 600; color: #333; background: transparent; }
+        .input-group i.icon-right { color: #555; cursor: pointer; font-size: 1.2rem; }
+
+        .terms-container { display: flex; align-items: flex-start; margin-bottom: 30px; font-size: 0.9rem; font-weight: 600; color: #000; padding: 0 10px; }
+        .terms-container input { margin-right: 15px; margin-top: 3px; transform: scale(1.3); accent-color: #af094b; }
+
+        .btn { width: 100%; padding: 18px; border-radius: 50px; border: none; font-size: 1.1rem; font-weight: 800; cursor: pointer; margin-bottom: 15px; transition: opacity 0.2s; }
+        .btn:hover { opacity: 0.9; }
+        .btn-secondary { background-color: #efc1da; color: black; }
+        .btn-primary { background-color: #af094b; color: white; }
+
+        .footer-link { text-align: center; font-size: 0.95rem; font-weight: 600; margin-top: 10px; }
+        .footer-link a { color: #af094b; text-decoration: none; font-weight: 800; }
+    </style>
+</head>
+<body>
+    <div class="mockup-wrapper">
+        <div class="mockup-container">
+            <div class="phone-screen">
+                <div class="dynamic-island"></div>
+                <div class="screen-content">
+                    
+                    <div class="header">
+                        <a href="index.html" class="back-btn"><i class="fas fa-arrow-left"></i></a>
+                    </div>
+
+                    <div class="title-section">
+                        <h1>Welcome to SheGO!</h1>
+                        <h2>Create New Account</h2>
+                    </div>
+
+                    <form action="login-email.html">
+                        <div class="input-group"><i class="fas fa-user icon-left"></i><input type="text" placeholder="Full Name"></div>
+                        <div class="input-group"><i class="fas fa-envelope icon-left"></i><input type="text" placeholder="Email/Number Phone"></div>
+                        <div class="input-group">
+                            <i class="fas fa-lock icon-left"></i>
+                            <input type="password" class="password-input" placeholder="Password">
+                            <i class="fas fa-eye-slash icon-right toggle-password"></i>
+                        </div>
+                        <div class="input-group">
+                            <i class="fas fa-lock icon-left"></i>
+                            <input type="password" class="password-input" placeholder="Confirm Password">
+                            <i class="fas fa-eye-slash icon-right toggle-password"></i>
+                        </div>
+
+                        <div class="terms-container">
+                            <input type="checkbox" id="terms">
+                            <label for="terms">I agree with Terms of a Conditions and Privacy Policy</label>
+                        </div>
+
+                        <button type="button" class="btn btn-secondary">Set Home Address</button>
+                        <button type="submit" class="btn btn-primary">Sign Up</button>
+                    </form>
+
+                    <div class="footer-link">
+                        Already Registered? <a href="login-email.html">Log In here.</a>
+                    </div>
+
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        document.querySelectorAll('.toggle-password').forEach(icon => {
+            icon.addEventListener('click', function() {
+                const input = this.parentElement.querySelector('input');
+                if (input.type === 'password') {
+                    input.type = 'text'; this.classList.replace('fa-eye-slash', 'fa-eye');
+                } else {
+                    input.type = 'password'; this.classList.replace('fa-eye', 'fa-eye-slash');
+                }
+            });
+        });
+    </script>
+</body>
+</html>

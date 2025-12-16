@@ -1,0 +1,148 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Help Centre</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    
+    <style>
+        /* --- FRAME CSS --- */
+        * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; }
+        body { background-color: #e0e0e0; display: flex; justify-content: center; align-items: center; min-height: 100vh; overflow: hidden; }
+        .mockup-wrapper { width: 100%; height: 100vh; display: flex; justify-content: center; align-items: center; }
+        .mockup-container { position: relative; width: 500px; height: 1020px; transform: scale(0.6); transform-origin: center center; background-image: url('mockup-iphone.png'); background-size: contain; background-repeat: no-repeat; background-position: center; }
+        .phone-screen { position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); width: 440px; height: 956px; border-radius: 55px; overflow: hidden; box-shadow: inset 0 0 20px rgba(0,0,0,0.2); }
+        .dynamic-island { position: absolute; top: 20px; left: 50%; transform: translateX(-50%); width: 126px; height: 37px; background-color: #000; border-radius: 20px; z-index: 9999; }
+
+        /* --- CONTENT CSS --- */
+        .screen-content { width: 100%; height: 100%; background-color: #af094b; /* Pink Background */ display: flex; flex-direction: column; overflow-y: auto; padding-bottom: 90px; }
+
+        .header { padding: 20px; padding-top: 60px; display: flex; align-items: center; justify-content: center; position: relative; margin-bottom: 20px; }
+        .back-btn { position: absolute; left: 25px; font-size: 1.8rem; color: white; text-decoration: none; cursor: pointer; }
+        .page-title { font-size: 1.5rem; font-weight: 800; color: white; }
+
+        .greeting-card { background-color: white; width: 90%; margin: 0 auto 30px auto; border-radius: 15px; padding: 25px; box-shadow: 0 4px 10px rgba(0,0,0,0.2); }
+        .greeting-title { color: #af094b; font-size: 1.3rem; font-weight: 800; margin-bottom: 5px; }
+        .greeting-text { color: #af094b; font-size: 1.1rem; font-weight: 600; }
+
+        .btn-chat-help { width: 85%; margin: 0 auto 40px auto; background-color: #efc1da; padding: 18px; border-radius: 50px; display: flex; align-items: center; justify-content: center; cursor: pointer; border: none; box-shadow: 0 4px 10px rgba(0,0,0,0.2); transition: transform 0.2s; }
+        .btn-chat-help:active { transform: scale(0.98); }
+        .btn-chat-help i { color: white; font-size: 1.6rem; margin-right: 15px; }
+        .btn-chat-help span { color: white; font-size: 1.2rem; font-weight: 700; }
+
+        .section-container { padding: 0 30px; margin-bottom: 30px; }
+        .section-header { font-size: 1.2rem; font-weight: 800; color: white; margin-bottom: 15px; }
+        .help-link { display: flex; justify-content: space-between; align-items: center; padding: 18px 0; border-bottom: 1px solid rgba(255, 255, 255, 0.5); color: white; font-size: 1.1rem; font-weight: 600; cursor: pointer; text-decoration: none; }
+        .help-link:hover { opacity: 0.8; }
+
+        /* NAV */
+        .bottom-nav { position: absolute; bottom: 0; width: 100%; background: #fcebf4; display: flex; justify-content: space-around; padding: 15px 0; border-top-left-radius: 25px; border-top-right-radius: 25px; box-shadow: 0 -2px 10px rgba(0,0,0,0.05); z-index: 2000; }
+        .nav-item { display: flex; flex-direction: column; align-items: center; text-decoration: none; color: #888; font-size: 0.8rem; font-weight: 600; position: relative; width: 20%; }
+        .nav-item i { font-size: 1.5rem; margin-bottom: 5px; }
+        .nav-item.active { color: #af094b; }
+        .nav-item.wallet-item { color: #af094b; margin-top: -35px; }
+        .wallet-circle { background: #af094b; width: 60px; height: 60px; border-radius: 50%; display: flex; align-items: center; justify-content: center; color: white; border: 5px solid white; margin-bottom: 5px; }
+        .badge { position: absolute; top: -5px; right: 15px; background: #af094b; color: white; font-size: 0.7rem; padding: 3px 6px; border-radius: 10px; border: 2px solid white; }
+
+        /* CHAT MODAL (ADVANCED) */
+        .modal-overlay { position: absolute; bottom: 0; left: 0; width: 100%; height: 85%; background: white; border-top-left-radius: 25px; border-top-right-radius: 25px; box-shadow: 0 -5px 25px rgba(0,0,0,0.3); z-index: 3000; transform: translateY(110%); transition: transform 0.3s ease; display: flex; flex-direction: column; }
+        .modal-overlay.show { transform: translateY(0); }
+        .chat-header { background: #af094b; color: white; padding: 20px; border-top-left-radius: 25px; border-top-right-radius: 25px; display: flex; justify-content: space-between; align-items: center; font-weight: bold; font-size: 1.1rem; }
+        .robot-showcase { display: flex; align-items: center; justify-content: center; padding: 20px; background: #fdf2f8; border-bottom: 1px solid #eee; gap: 15px; }
+        .robot-circle { width: 70px; height: 70px; background: white; border-radius: 50%; display: flex; align-items: center; justify-content: center; border: 3px solid #af094b; font-size: 2.5rem; color: #af094b; }
+        .robot-bubble { background: #00aaff; color: white; padding: 10px 15px; border-radius: 15px; border-bottom-left-radius: 0; font-size: 0.9rem; font-weight: 600; max-width: 180px; position: relative; }
+        .robot-bubble::after { content: ''; position: absolute; bottom: -8px; left: 0; border-width: 10px 10px 0; border-style: solid; border-color: #00aaff transparent; display: block; width: 0; }
+        .chat-body { flex-grow: 1; padding: 20px; background: white; overflow-y: auto; display: flex; flex-direction: column; gap: 10px; }
+        .chat-msg { padding: 12px 18px; border-radius: 15px; max-width: 80%; font-size: 0.95rem; }
+        .chat-msg.user { background: #ddd; color: black; border-bottom-right-radius: 0; align-self: flex-end; }
+        .chat-msg.agent { background: #efc1da; color: black; border-bottom-left-radius: 0; align-self: flex-start; }
+        .chat-input-area { padding: 20px; border-top: 1px solid #ddd; display: flex; flex-direction: column; gap: 10px; background: #fff; }
+        .input-row { display: flex; gap: 10px; }
+        .chat-input { flex-grow: 1; padding: 12px; border-radius: 20px; border: 1px solid #ccc; outline: none; background: #f5f5f5; }
+        .btn-send { background: #af094b; color: white; border: none; width: 45px; height: 45px; border-radius: 50%; cursor: pointer; display: flex; align-items: center; justify-content: center; }
+        .btn-live-agent { width: 100%; padding: 12px; border: 2px solid #af094b; border-radius: 50px; background: white; color: #af094b; font-weight: 700; cursor: pointer; display: flex; align-items: center; justify-content: center; gap: 8px; }
+        .btn-live-agent:hover { background: #fcebf4; }
+    </style>
+</head>
+<body>
+    <div class="mockup-wrapper">
+        <div class="mockup-container">
+            <div class="phone-screen">
+                <div class="dynamic-island"></div>
+                <div class="screen-content">
+                    
+                    <div class="header">
+                        <a href="profile.html" class="back-btn"><i class="fas fa-arrow-left"></i></a>
+                        <div class="page-title">Help Centre</div>
+                    </div>
+
+                    <div class="greeting-card">
+                        <div class="greeting-title">Hi!....</div>
+                        <div class="greeting-text">Get the help that you need?</div>
+                    </div>
+
+                    <button class="btn-chat-help" onclick="openChat()">
+                        <i class="fas fa-comment-dots"></i>
+                        <span>Chat to Get Help</span>
+                    </button>
+
+                    <div class="section-container">
+                        <div class="section-header">General</div>
+                        <div class="help-link" onclick="alert('Support Request Page...')">Your Support Request >>></div>
+                        <div class="help-link" onclick="alert('FAQ Page...')">FAQ & Info Centre >>></div>
+                    </div>
+
+                    <div class="section-container">
+                        <div class="section-header">Safety & Guideline</div>
+                        <div class="help-link" onclick="alert('Guidelines Page...')">SheGO Community Guideline >>></div>
+                    </div>
+
+                    <div class="bottom-nav">
+                        <a href="home.html" class="nav-item"><i class="fas fa-home"></i>Home</a>
+                        <a href="select-ride.html" class="nav-item"><i class="fas fa-map-marker-alt"></i>Trips</a>
+                        <a href="shewallet.html" class="nav-item wallet-item"><div class="wallet-circle"><i class="fas fa-wallet"></i></div>SheWallet</a>
+                        <a href="notifications.html" class="nav-item"><i class="fas fa-bell"></i><span class="badge">10</span>Notifications</a>
+                        <a href="profile.html" class="nav-item active"><i class="far fa-user-circle"></i>Profile</a>
+                    </div>
+
+                    <div class="modal-overlay" id="helpChatModal">
+                        <div class="chat-header"><span>SheGO Assistant</span><i class="fas fa-times" style="cursor:pointer;" onclick="closeChat()"></i></div>
+                        <div class="robot-showcase"><div class="robot-circle"><i class="fas fa-robot"></i></div><div class="robot-bubble">Hello! How may I help you?</div></div>
+                        <div class="chat-body" id="chatBody"></div>
+                        <div class="chat-input-area">
+                            <button class="btn-live-agent" onclick="connectHuman()"><i class="fas fa-headset"></i> Chat with Real Person</button>
+                            <div class="input-row"><input type="text" class="chat-input" placeholder="Type message..." id="userMessage"><button class="btn-send" onclick="sendMessage()"><i class="fas fa-paper-plane"></i></button></div>
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        function openChat() { document.getElementById('helpChatModal').classList.add('show'); }
+        function closeChat() { document.getElementById('helpChatModal').classList.remove('show'); }
+        function sendMessage() {
+            const input = document.getElementById('userMessage'); const message = input.value; if(message.trim()==="") return;
+            const chatBody = document.getElementById('chatBody');
+            const userDiv = document.createElement('div'); userDiv.className = 'chat-msg user'; userDiv.textContent = message;
+            chatBody.appendChild(userDiv); input.value = ""; chatBody.scrollTop = chatBody.scrollHeight;
+            setTimeout(() => {
+                const botDiv = document.createElement('div'); botDiv.className = 'chat-msg agent'; botDiv.textContent = "How can I help you with that?";
+                chatBody.appendChild(botDiv); chatBody.scrollTop = chatBody.scrollHeight;
+            }, 1000);
+        }
+        function connectHuman() {
+            const chatBody = document.getElementById('chatBody');
+            const sysDiv = document.createElement('div'); sysDiv.style.textAlign='center'; sysDiv.style.color='#888'; sysDiv.style.fontSize='0.8rem'; sysDiv.textContent="Connecting...";
+            chatBody.appendChild(sysDiv);
+            setTimeout(() => {
+                const agentDiv = document.createElement('div'); agentDiv.className = 'chat-msg agent'; agentDiv.style.border = "2px solid #af094b"; agentDiv.textContent = "Hi! I'm Sarah. How can I assist you?";
+                chatBody.appendChild(agentDiv); chatBody.scrollTop = chatBody.scrollHeight;
+            }, 2000);
+        }
+    </script>
+</body>
+</html>

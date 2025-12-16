@@ -1,0 +1,146 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Select Driver</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    
+    <style>
+        /* FRAME CSS */
+        * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; }
+        body { background-color: #e0e0e0; display: flex; justify-content: center; align-items: center; min-height: 100vh; overflow: hidden; }
+        .mockup-wrapper { width: 100%; height: 100vh; display: flex; justify-content: center; align-items: center; }
+        .mockup-container { position: relative; width: 500px; height: 1020px; transform: scale(0.6); transform-origin: center center; background-image: url('mockup-iphone.png'); background-size: contain; background-repeat: no-repeat; background-position: center; }
+        .phone-screen { position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); width: 440px; height: 956px; border-radius: 55px; overflow: hidden; box-shadow: inset 0 0 20px rgba(0,0,0,0.2); }
+        .dynamic-island { position: absolute; top: 20px; left: 50%; transform: translateX(-50%); width: 126px; height: 37px; background-color: #000; border-radius: 20px; z-index: 9999; }
+
+        /* CONTENT CSS */
+        .screen-content { width: 100%; height: 100%; background-color: #f2f2f2; display: flex; flex-direction: column; }
+        
+        .header { background-color: #af094b; padding: 20px; padding-top: 60px; display: flex; align-items: center; color: white; }
+        .back-btn { font-size: 1.8rem; color: white; text-decoration: none; cursor: pointer; margin-right: 20px; margin-left: 10px; }
+        .page-title { font-size: 1.4rem; font-weight: 800; }
+
+        .driver-list { flex-grow: 1; padding: 20px; overflow-y: auto; padding-bottom: 120px; }
+        .driver-card {
+            background: white; border-radius: 25px; padding: 20px; margin-bottom: 20px;
+            display: flex; align-items: flex-start; box-shadow: 0 2px 10px rgba(0,0,0,0.05);
+            cursor: pointer; transition: transform 0.1s;
+        }
+        .driver-card:active { transform: scale(0.98); }
+        .driver-photo { width: 90px; height: 90px; border-radius: 15px; object-fit: cover; margin-right: 20px; background-color: #ddd; }
+        .driver-info { flex-grow: 1; }
+        .driver-name { font-size: 1.3rem; font-weight: 800; color: black; margin-bottom: 8px; }
+        .driver-detail { font-size: 0.9rem; color: #777; margin-bottom: 4px; font-weight: 600; }
+        .driver-detail span { font-weight: 400; color: #555; }
+        .rating { color: #FFD700; font-size: 1rem; margin-top: 5px; }
+
+        .chatbot-btn { position: absolute; bottom: 120px; right: 25px; width: 60px; height: 60px; background: white; border: 2px solid #af094b; border-radius: 50%; display: flex; align-items: center; justify-content: center; box-shadow: 0 4px 10px rgba(0,0,0,0.1); cursor: pointer; z-index: 100; font-size: 2.2rem; color: #af094b; }
+
+        /* NAV */
+        .bottom-nav { position: absolute; bottom: 0; width: 100%; background: #fcebf4; display: flex; justify-content: space-around; padding: 15px 0; border-top-left-radius: 25px; border-top-right-radius: 25px; box-shadow: 0 -2px 10px rgba(0,0,0,0.05); z-index: 200; }
+        .nav-item { display: flex; flex-direction: column; align-items: center; text-decoration: none; color: #888; font-size: 0.8rem; font-weight: 600; position: relative; width: 20%; }
+        .nav-item i { font-size: 1.5rem; margin-bottom: 5px; }
+        .nav-item.active { color: #af094b; }
+        .nav-item.wallet-item { color: #af094b; margin-top: -35px; }
+        .wallet-circle { background: #af094b; width: 60px; height: 60px; border-radius: 50%; display: flex; align-items: center; justify-content: center; color: white; border: 5px solid white; margin-bottom: 5px; }
+        .badge { position: absolute; top: -5px; right: 15px; background: #af094b; color: white; font-size: 0.7rem; padding: 3px 6px; border-radius: 10px; border: 2px solid white; }
+
+        /* MODAL (ADVANCED) */
+        .modal-overlay { position: absolute; bottom: 0; left: 0; width: 100%; height: 85%; background: white; border-top-left-radius: 25px; border-top-right-radius: 25px; box-shadow: 0 -5px 25px rgba(0,0,0,0.3); z-index: 3000; transform: translateY(110%); transition: transform 0.3s ease; display: flex; flex-direction: column; }
+        .modal-overlay.show { transform: translateY(0); }
+        .chat-header { background: #af094b; color: white; padding: 20px; border-top-left-radius: 25px; border-top-right-radius: 25px; display: flex; justify-content: space-between; align-items: center; font-weight: bold; font-size: 1.1rem; }
+        .robot-showcase { display: flex; align-items: center; justify-content: center; padding: 20px; background: #fdf2f8; border-bottom: 1px solid #eee; gap: 15px; }
+        .robot-circle { width: 70px; height: 70px; background: white; border-radius: 50%; display: flex; align-items: center; justify-content: center; border: 3px solid #af094b; font-size: 2.5rem; color: #af094b; }
+        .robot-bubble { background: #00aaff; color: white; padding: 10px 15px; border-radius: 15px; border-bottom-left-radius: 0; font-size: 0.9rem; font-weight: 600; max-width: 180px; position: relative; }
+        .robot-bubble::after { content: ''; position: absolute; bottom: -8px; left: 0; border-width: 10px 10px 0; border-style: solid; border-color: #00aaff transparent; display: block; width: 0; }
+        .chat-body { flex-grow: 1; padding: 20px; background: white; overflow-y: auto; display: flex; flex-direction: column; gap: 10px; }
+        .chat-msg { padding: 12px 18px; border-radius: 15px; max-width: 80%; font-size: 0.95rem; }
+        .chat-msg.user { background: #ddd; color: black; border-bottom-right-radius: 0; align-self: flex-end; }
+        .chat-msg.agent { background: #efc1da; color: black; border-bottom-left-radius: 0; align-self: flex-start; }
+        .chat-input-area { padding: 20px; border-top: 1px solid #ddd; display: flex; flex-direction: column; gap: 10px; background: #fff; }
+        .input-row { display: flex; gap: 10px; }
+        .chat-input { flex-grow: 1; padding: 12px; border-radius: 20px; border: 1px solid #ccc; outline: none; background: #f5f5f5; }
+        .btn-send { background: #af094b; color: white; border: none; width: 45px; height: 45px; border-radius: 50%; cursor: pointer; display: flex; align-items: center; justify-content: center; }
+        .btn-live-agent { width: 100%; padding: 12px; border: 2px solid #af094b; border-radius: 50px; background: white; color: #af094b; font-weight: 700; cursor: pointer; display: flex; align-items: center; justify-content: center; gap: 8px; }
+    </style>
+</head>
+<body>
+    <div class="mockup-wrapper">
+        <div class="mockup-container">
+            <div class="phone-screen">
+                <div class="dynamic-island"></div>
+                <div class="screen-content">
+                    
+                    <div class="header">
+                        <a href="trip-detail.html" class="back-btn"><i class="fas fa-arrow-left"></i></a>
+                        <div class="page-title">Select You SheGO Driver</div>
+                    </div>
+
+                    <div class="driver-list">
+                        <div class="driver-card" onclick="window.location.href='confirm-driver.html'">
+                            <img src="driver-photo-1.jpg" alt="Nadhira" class="driver-photo">
+                            <div class="driver-info">
+                                <div class="driver-name">Nadhira Zafran</div>
+                                <div class="driver-detail">Age: <span>25 Years Old</span></div>
+                                <div class="driver-detail">Gender: <span>Female</span></div>
+                                <div class="driver-detail">Car: <span>Perodua Myvi (VAG 7123)</span></div>
+                                <div class="rating"><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="far fa-star"></i></div>
+                            </div>
+                        </div>
+                        <div class="driver-card" onclick="window.location.href='confirm-driver.html'">
+                            <img src="driver-photo-2.jpg" alt="Liu Mei Xuan" class="driver-photo">
+                            <div class="driver-info">
+                                <div class="driver-name">Liu Mei Xuan</div>
+                                <div class="driver-detail">Age: <span>30 Years Old</span></div>
+                                <div class="driver-detail">Gender: <span>Female</span></div>
+                                <div class="driver-detail">Car: <span>Honda City (WQP 8891)</span></div>
+                                <div class="rating"><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i></div>
+                            </div>
+                        </div>
+                        <div class="driver-card" onclick="window.location.href='confirm-driver.html'">
+                            <img src="driver-photo-3.jpg" alt="Aisha" class="driver-photo">
+                            <div class="driver-info">
+                                <div class="driver-name">Aisha Devi</div>
+                                <div class="driver-detail">Age: <span>27 Years Old</span></div>
+                                <div class="driver-detail">Gender: <span>Female</span></div>
+                                <div class="driver-detail">Car: <span>Proton Iriz (PLR 5620)</span></div>
+                                <div class="rating"><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="far fa-star"></i></div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="chatbot-btn" onclick="openChat()"><i class="fas fa-comment-dots"></i></div>
+
+                    <div class="bottom-nav">
+                        <a href="home.html" class="nav-item"><i class="fas fa-home"></i>Home</a>
+                        <a href="trip-detail.html" class="nav-item active"><i class="fas fa-map-marker-alt"></i>Trips</a>
+                        <a href="shewallet.html" class="nav-item wallet-item"><div class="wallet-circle"><i class="fas fa-wallet"></i></div>SheWallet</a>
+                        <a href="notifications.html" class="nav-item"><i class="fas fa-bell"></i><span class="badge">10</span>Notifications</a>
+                        <a href="profile.html" class="nav-item"><i class="far fa-user-circle"></i>Profile</a>
+                    </div>
+
+                    <div class="modal-overlay" id="driverChatModal">
+                        <div class="chat-header"><span>SheGO Assistant</span><i class="fas fa-times" style="cursor:pointer;" onclick="closeChat()"></i></div>
+                        <div class="robot-showcase"><div class="robot-circle"><i class="fas fa-robot"></i></div><div class="robot-bubble">Hello! Need help choosing a driver?</div></div>
+                        <div class="chat-body" id="chatBody"></div>
+                        <div class="chat-input-area">
+                            <button class="btn-live-agent" onclick="connectHuman()"><i class="fas fa-headset"></i> Chat with Real Person</button>
+                            <div class="input-row"><input type="text" class="chat-input" placeholder="Ask about drivers..." id="userMessage"><button class="btn-send" onclick="sendMessage()"><i class="fas fa-paper-plane"></i></button></div>
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        function openChat() { document.getElementById('driverChatModal').classList.add('show'); }
+        function closeChat() { document.getElementById('driverChatModal').classList.remove('show'); }
+        function sendMessage() { const i=document.getElementById('userMessage'); const m=i.value; if(!m)return; const b=document.getElementById('chatBody'); b.innerHTML+=`<div class='chat-msg user'>${m}</div>`; i.value=''; b.scrollTop=b.scrollHeight; setTimeout(()=>{b.innerHTML+=`<div class='chat-msg agent'>All drivers are verified.</div>`; b.scrollTop=b.scrollHeight;},1000); }
+        function connectHuman() { const b=document.getElementById('chatBody'); b.innerHTML+=`<div style='text-align:center;color:#888;'>Connecting...</div>`; setTimeout(()=>{b.innerHTML+=`<div class='chat-msg agent' style='border:2px solid #af094b'>Hi! Sarah here.</div>`; b.scrollTop=b.scrollHeight;},2000); }
+    </script>
+</body>
+</html>
