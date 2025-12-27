@@ -1,0 +1,198 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Arrived - Driver 1</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    
+    <style>
+        /* FRAME CSS */
+        * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; }
+        body { background-color: #e0e0e0; display: flex; justify-content: center; align-items: center; min-height: 100vh; overflow: hidden; }
+        .mockup-wrapper { width: 100%; height: 100vh; display: flex; justify-content: center; align-items: center; }
+        .mockup-container { position: relative; width: 500px; height: 1020px; transform: scale(0.6); transform-origin: center center; background-image: url('mockup-iphone.png'); background-size: contain; background-repeat: no-repeat; background-position: center; }
+        .phone-screen { position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); width: 440px; height: 956px; border-radius: 55px; overflow: hidden; box-shadow: inset 0 0 20px rgba(0,0,0,0.2); }
+        .dynamic-island { position: absolute; top: 20px; left: 50%; transform: translateX(-50%); width: 126px; height: 37px; background-color: #000; border-radius: 20px; z-index: 9999; }
+
+        /* CONTENT CSS */
+        .screen-content { width: 100%; height: 100%; background-color: #f8f8f8; display: flex; flex-direction: column; overflow-y: auto; padding-bottom: 90px; }
+        
+        .top-banner { background-color: #af094b; padding: 60px 20px 50px 20px; text-align: center; color: white; border-bottom-left-radius: 30px; border-bottom-right-radius: 30px; }
+        .check-icon { font-size: 3rem; margin-bottom: 10px; }
+        .banner-title { font-size: 1.8rem; font-weight: 800; margin-bottom: 5px; }
+        .banner-subtitle { font-size: 1rem; opacity: 0.9; }
+
+        .content-card { background: white; width: 90%; margin: -30px auto 20px auto; border-radius: 20px; padding: 30px 25px; box-shadow: 0 5px 15px rgba(0,0,0,0.1); text-align: center; }
+        
+        .destination-title { font-size: 1.6rem; font-weight: 800; color: #af094b; margin-bottom: 10px; line-height: 1.2; }
+        .destination-address { font-size: 1rem; color: #555; line-height: 1.4; margin-bottom: 20px; }
+        
+        .divider { border-bottom: 1px solid #eee; margin: 20px 0; }
+
+        /* VOUCHER SECTION */
+        .voucher-row {
+            display: flex; justify-content: space-between; align-items: center;
+            background-color: #fff0f5; padding: 15px; border-radius: 12px;
+            margin-bottom: 20px; border: 1px dashed #af094b; cursor: pointer; text-align: left;
+        }
+        .voucher-left { display: flex; align-items: center; gap: 10px; font-weight: 700; color: #af094b; }
+        .voucher-right { font-size: 0.9rem; color: #666; }
+        
+        .fare-info { font-size: 1.2rem; font-weight: 700; color: black; margin-bottom: 5px; }
+        .distance-info { font-size: 0.9rem; color: #666; margin-bottom: 25px; }
+        
+        .fare-amount { font-size: 2.5rem; font-weight: 800; color: #af094b; display: block; margin-top: 5px; }
+        .fare-original { text-decoration: line-through; color: #999; font-size: 1.5rem; margin-right: 10px; display: none; }
+
+        .btn-rate-pay { width: 100%; padding: 18px; border-radius: 50px; border: none; background-color: #af094b; color: white; font-size: 1.2rem; font-weight: 800; cursor: pointer; margin-bottom: 15px; transition: background-color 0.3s ease; }
+        .btn-rate-pay:hover { opacity: 0.9; }
+        .btn-rate-pay.success { background-color: #28a745; pointer-events: none; }
+
+        .btn-view-detail { width: 100%; padding: 15px; border-radius: 50px; border: 2px solid #af094b; background-color: transparent; color: #af094b; font-size: 1rem; font-weight: 700; cursor: pointer; }
+
+        /* NAV */
+        .bottom-nav { position: absolute; bottom: 0; width: 100%; background: #fcebf4; display: flex; justify-content: space-around; padding: 15px 0; border-top-left-radius: 25px; border-top-right-radius: 25px; box-shadow: 0 -2px 10px rgba(0,0,0,0.05); z-index: 2000; }
+        .nav-item { display: flex; flex-direction: column; align-items: center; text-decoration: none; color: #888; font-size: 0.8rem; font-weight: 600; position: relative; width: 20%; }
+        .nav-item i { font-size: 1.5rem; margin-bottom: 5px; }
+        .nav-item.active { color: #af094b; }
+        .nav-item.wallet-item { color: #af094b; margin-top: -35px; }
+        .wallet-circle { background: #af094b; width: 60px; height: 60px; border-radius: 50%; display: flex; align-items: center; justify-content: center; color: white; border: 5px solid white; margin-bottom: 5px; }
+        .badge { position: absolute; top: -5px; right: 15px; background: #af094b; color: white; font-size: 0.7rem; padding: 3px 6px; border-radius: 10px; border: 2px solid white; }
+    </style>
+</head>
+<body>
+    <div class="mockup-wrapper">
+        <div class="mockup-container">
+            <div class="phone-screen">
+                <div class="dynamic-island"></div>
+                <div class="screen-content">
+                    
+                    <div class="top-banner">
+                        <i class="fas fa-check-circle check-icon"></i>
+                        <div class="banner-title">You Have Arrived!</div>
+                        <div class="banner-subtitle">Thank you for riding with SheGO.</div>
+                    </div>
+
+                    <div class="content-card">
+                        
+                        <div class="destination-title" id="destTitle">Loading...</div>
+                        <div class="destination-address" id="destAddress">Fetching location...</div>
+                        
+                        <div class="divider"></div>
+
+                        <div class="voucher-row" onclick="goToVouchers('arrived-driver-1.html')">
+                            <div class="voucher-left">
+                                <i class="fas fa-ticket-alt"></i>
+                                <span id="voucherLabel">Apply Promo Code</span>
+                            </div>
+                            <div class="voucher-right" id="voucherRight">
+                                <i class="fas fa-chevron-right"></i>
+                            </div>
+                        </div>
+                        
+                        <div class="fare-info">
+                            Your Fare 
+                            <div style="margin-top:5px;">
+                                <span class="fare-original" id="originalPrice">RM 0.00</span>
+                                <span class="fare-amount" id="fareDisplay">RM 0.00</span>
+                            </div>
+                        </div>
+                        <div class="distance-info" id="distDisplay">Total Distance: 0 km</div>
+
+                        <button class="btn-rate-pay" id="ratePayBtn" onclick="handleRatePay()">Rate & Pay Now</button>
+                        <button class="btn-view-detail" onclick="window.location.href='feedback-driver-1.html'">View Trip Detail</button>
+                    </div>
+
+                    <div class="bottom-nav">
+                        <a href="home.html" class="nav-item"><i class="fas fa-home"></i>Home</a>
+                        <a href="trip-detail.html" class="nav-item active"><i class="fas fa-map-marker-alt"></i>Trips</a>
+                        <a href="shewallet.html" class="nav-item wallet-item"><div class="wallet-circle"><i class="fas fa-wallet"></i></div>SheWallet</a>
+                        <a href="notifications.html" class="nav-item"><i class="fas fa-bell"></i><span class="badge">10</span>Notifications</a>
+                        <a href="profile.html" class="nav-item"><i class="far fa-user-circle"></i>Profile</a>
+                    </div>
+
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // --- 1. HAVERSINE FORMULA ---
+        function getDistanceFromLatLonInKm(lat1, lon1, lat2, lon2) {
+            var R = 6371; var dLat = deg2rad(lat2-lat1); var dLon = deg2rad(lon2-lon1); 
+            var a = Math.sin(dLat/2) * Math.sin(dLat/2) + Math.cos(deg2rad(lat1)) * Math.cos(deg2rad(lat2)) * Math.sin(dLon/2) * Math.sin(dLon/2); 
+            var c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1-a)); return R * c; 
+        }
+        function deg2rad(deg) { return deg * (Math.PI/180) }
+
+        // --- 2. EXECUTE ON PAGE LOAD ---
+        window.onload = function() {
+            // Retrieve data
+            const pickupLat = parseFloat(localStorage.getItem('shego_pickup_lat')) || 3.1475;
+            const pickupLng = parseFloat(localStorage.getItem('shego_pickup_lng')) || 101.6995;
+            const dropoffLat = parseFloat(localStorage.getItem('shego_dropoff_lat')) || 3.1579;
+            const dropoffLng = parseFloat(localStorage.getItem('shego_dropoff_lng')) || 101.7116;
+            const dropoffName = localStorage.getItem('shego_dropoff_name') || "Suria KLCC, Kuala Lumpur";
+
+            // Calculate Base Price
+            const distanceKm = getDistanceFromLatLonInKm(pickupLat, pickupLng, dropoffLat, dropoffLng);
+            let basePrice = distanceKm * 1.00;
+            if(basePrice < 3) basePrice = 3.00;
+
+            // Check Voucher
+            const discountAmount = parseFloat(localStorage.getItem('shego_voucher_amount')) || 0;
+            const discountName = localStorage.getItem('shego_voucher_name');
+
+            let finalPrice = basePrice - discountAmount;
+            if(finalPrice < 0) finalPrice = 0;
+
+            // Update UI
+            document.getElementById('destTitle').innerText = dropoffName.split(',')[0];
+            document.getElementById('destAddress').innerText = dropoffName;
+            document.getElementById('distDisplay').innerText = "Total Distance: " + distanceKm.toFixed(1) + " km";
+
+            // Update Price & Voucher
+            if(discountAmount > 0) {
+                document.getElementById('originalPrice').style.display = 'inline';
+                document.getElementById('originalPrice').innerText = "RM " + basePrice.toFixed(2);
+                document.getElementById('fareDisplay').innerText = "RM " + finalPrice.toFixed(2);
+                
+                document.getElementById('voucherLabel').innerText = discountName + " (-RM" + discountAmount + ")";
+                document.getElementById('voucherLabel').style.color = "#28a745"; 
+                document.getElementById('voucherRight').innerHTML = '<i class="fas fa-times-circle" style="color:red;" onclick="removeVoucher(event)"></i>';
+            } else {
+                document.getElementById('fareDisplay').innerText = "RM " + basePrice.toFixed(2);
+            }
+        };
+
+        // --- 3. VOUCHER LOGIC ---
+        function goToVouchers(pageName) {
+            localStorage.setItem('return_page', pageName); // Set return path
+            window.location.href = 'vouchers.html';
+        }
+
+        function removeVoucher(e) {
+            e.stopPropagation(); 
+            localStorage.removeItem('shego_voucher_amount');
+            localStorage.removeItem('shego_voucher_name');
+            location.reload(); 
+        }
+
+        // --- 4. PAYMENT LOGIC (Specific to Driver 1) ---
+        function handleRatePay() {
+            const btn = document.getElementById('ratePayBtn');
+            btn.innerHTML = '<i class="fas fa-check"></i> Payment Successful!';
+            btn.classList.add('success');
+            
+            setTimeout(() => {
+                // Clear voucher
+                localStorage.removeItem('shego_voucher_amount');
+                localStorage.removeItem('shego_voucher_name');
+                // Redirect ke Feedback Driver 1
+                window.location.href = "feedback-driver-1.html";
+            }, 1500);
+        }
+    </script>
+</body>
+</html>

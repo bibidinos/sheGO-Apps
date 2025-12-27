@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Arrived</title>
+    <title>Arrived - Driver 2</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     
     <style>
@@ -29,17 +29,16 @@
         .destination-address { font-size: 1rem; color: #555; line-height: 1.4; margin-bottom: 20px; }
         
         .divider { border-bottom: 1px solid #eee; margin: 20px 0; }
-        
-        /* VOUCHER SECTION (NEW) */
+
+        /* VOUCHER SECTION */
         .voucher-row {
             display: flex; justify-content: space-between; align-items: center;
             background-color: #fff0f5; padding: 15px; border-radius: 12px;
-            margin-bottom: 20px; border: 1px dashed #af094b; cursor: pointer;
+            margin-bottom: 20px; border: 1px dashed #af094b; cursor: pointer; text-align: left;
         }
         .voucher-left { display: flex; align-items: center; gap: 10px; font-weight: 700; color: #af094b; }
         .voucher-right { font-size: 0.9rem; color: #666; }
-        .discount-text { color: #28a745; font-weight: 800; display: none; }
-
+        
         .fare-info { font-size: 1.2rem; font-weight: 700; color: black; margin-bottom: 5px; }
         .distance-info { font-size: 0.9rem; color: #666; margin-bottom: 25px; }
         
@@ -82,7 +81,7 @@
                         
                         <div class="divider"></div>
 
-                        <div class="voucher-row" onclick="window.location.href='vouchers.html'">
+                        <div class="voucher-row" onclick="goToVouchers('arrived-driver-2.html')">
                             <div class="voucher-left">
                                 <i class="fas fa-ticket-alt"></i>
                                 <span id="voucherLabel">Apply Promo Code</span>
@@ -102,7 +101,7 @@
                         <div class="distance-info" id="distDisplay">Total Distance: 0 km</div>
 
                         <button class="btn-rate-pay" id="ratePayBtn" onclick="handleRatePay()">Rate & Pay Now</button>
-                        <button class="btn-view-detail" onclick="handleViewDetail()">View Trip Detail</button>
+                        <button class="btn-view-detail" onclick="window.location.href='feedback-driver-2.html'">View Trip Detail</button>
                     </div>
 
                     <div class="bottom-nav">
@@ -119,88 +118,74 @@
     </div>
 
     <script>
-        // --- 1. HAVERSINE FORMULA TO CALCULATE DISTANCE (KM) ---
+        // --- 1. HAVERSINE FORMULA ---
         function getDistanceFromLatLonInKm(lat1, lon1, lat2, lon2) {
-            var R = 6371; 
-            var dLat = deg2rad(lat2-lat1);
-            var dLon = deg2rad(lon2-lon1); 
+            var R = 6371; var dLat = deg2rad(lat2-lat1); var dLon = deg2rad(lon2-lon1); 
             var a = Math.sin(dLat/2) * Math.sin(dLat/2) + Math.cos(deg2rad(lat1)) * Math.cos(deg2rad(lat2)) * Math.sin(dLon/2) * Math.sin(dLon/2); 
-            var c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1-a)); 
-            return R * c; 
+            var c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1-a)); return R * c; 
         }
         function deg2rad(deg) { return deg * (Math.PI/180) }
 
         // --- 2. EXECUTE ON PAGE LOAD ---
         window.onload = function() {
-            // Retrieve stored data
             const pickupLat = parseFloat(localStorage.getItem('shego_pickup_lat')) || 3.1475;
             const pickupLng = parseFloat(localStorage.getItem('shego_pickup_lng')) || 101.6995;
             const dropoffLat = parseFloat(localStorage.getItem('shego_dropoff_lat')) || 3.1579;
             const dropoffLng = parseFloat(localStorage.getItem('shego_dropoff_lng')) || 101.7116;
             const dropoffName = localStorage.getItem('shego_dropoff_name') || "Suria KLCC, Kuala Lumpur";
 
-            // Calculate Base Price
             const distanceKm = getDistanceFromLatLonInKm(pickupLat, pickupLng, dropoffLat, dropoffLng);
             let basePrice = distanceKm * 1.00;
-            if(basePrice < 3) basePrice = 3.00; // Minimum fare
+            if(basePrice < 3) basePrice = 3.00;
 
-            // Check for Voucher
             const discountAmount = parseFloat(localStorage.getItem('shego_voucher_amount')) || 0;
             const discountName = localStorage.getItem('shego_voucher_name');
 
             let finalPrice = basePrice - discountAmount;
             if(finalPrice < 0) finalPrice = 0;
 
-            // Update UI - Address
             document.getElementById('destTitle').innerText = dropoffName.split(',')[0];
             document.getElementById('destAddress').innerText = dropoffName;
             document.getElementById('distDisplay').innerText = "Total Distance: " + distanceKm.toFixed(1) + " km";
 
-            // Update UI - Price & Voucher
             if(discountAmount > 0) {
                 document.getElementById('originalPrice').style.display = 'inline';
                 document.getElementById('originalPrice').innerText = "RM " + basePrice.toFixed(2);
                 document.getElementById('fareDisplay').innerText = "RM " + finalPrice.toFixed(2);
                 
-                // Update Voucher Button State
                 document.getElementById('voucherLabel').innerText = discountName + " (-RM" + discountAmount + ")";
-                document.getElementById('voucherLabel').style.color = "#28a745"; // Green text
+                document.getElementById('voucherLabel').style.color = "#28a745"; 
                 document.getElementById('voucherRight').innerHTML = '<i class="fas fa-times-circle" style="color:red;" onclick="removeVoucher(event)"></i>';
             } else {
                 document.getElementById('fareDisplay').innerText = "RM " + basePrice.toFixed(2);
             }
         };
 
-        // --- 3. LOGIC ---
-        function removeVoucher(e) {
-            e.stopPropagation(); // Prevent clicking the parent div
-            localStorage.removeItem('shego_voucher_amount');
-            localStorage.removeItem('shego_voucher_name');
-            location.reload(); // Refresh to remove discount
+        // --- 3. VOUCHER LOGIC ---
+        function goToVouchers(pageName) {
+            localStorage.setItem('return_page', pageName); 
+            window.location.href = 'vouchers.html';
         }
 
+        function removeVoucher(e) {
+            e.stopPropagation(); 
+            localStorage.removeItem('shego_voucher_amount');
+            localStorage.removeItem('shego_voucher_name');
+            location.reload(); 
+        }
+
+        // --- 4. PAYMENT LOGIC (DRIVER 2) ---
         function handleRatePay() {
             const btn = document.getElementById('ratePayBtn');
             btn.innerHTML = '<i class="fas fa-check"></i> Payment Successful!';
             btn.classList.add('success');
             
             setTimeout(() => {
-                // Clear voucher after use
                 localStorage.removeItem('shego_voucher_amount');
                 localStorage.removeItem('shego_voucher_name');
-
-                const driverId = localStorage.getItem('shego_driver_id');
-                if (driverId === '2') window.location.href = "feedback-driver-2.html";
-                else if (driverId === '3') window.location.href = "feedback-driver-3.html";
-                else window.location.href = "feedback-driver-1.html";
+                // LINK KHAS UNTUK DRIVER 2
+                window.location.href = "feedback-driver-2.html";
             }, 1500);
-        }
-
-        function handleViewDetail() {
-             const driverId = localStorage.getItem('shego_driver_id');
-             if (driverId === '2') window.location.href = "feedback-driver-2.html";
-             else if (driverId === '3') window.location.href = "feedback-driver-3.html";
-             else window.location.href = "feedback-driver-1.html";
         }
     </script>
 </body>
