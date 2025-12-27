@@ -17,7 +17,7 @@
 
         /* CONTENT */
         .screen-content { width: 100%; height: 100%; background-color: #fff; display: flex; flex-direction: column; position: relative; }
-        .content-scroll { flex-grow: 1; overflow-y: auto; padding-bottom: 120px; } /* Extra padding for nav */
+        .content-scroll { flex-grow: 1; overflow-y: auto; padding-bottom: 120px; }
 
         .header { padding: 20px; padding-top: 60px; display: flex; align-items: center; justify-content: center; position: relative; }
         .back-btn { position: absolute; left: 25px; font-size: 1.8rem; color: black; text-decoration: none; cursor: pointer; }
@@ -37,18 +37,20 @@
         .custom-input-real { width: 100%; height: 100%; position: absolute; top: 0; left: 0; z-index: 1; border: 2px solid #af094b; border-radius: 15px; padding: 0 20px; font-size: 1.2rem; font-weight: 800; color: #af094b; text-align: center; background: white; outline: none; opacity: 0; pointer-events: none; }
         .custom-input-real.active { opacity: 1; pointer-events: auto; z-index: 3; background-color: #fff0f5; }
 
+        /* PAYMENT LIST STYLES */
         .payment-list { padding: 0 20px; margin-top: 10px; }
-        .payment-item { display: flex; align-items: center; justify-content: space-between; padding: 15px 0; border-bottom: 1px solid #eee; cursor: pointer; }
-        .payment-item.selected { background-color: #fff0f5; padding: 15px 10px; border-radius: 10px; border-bottom: none; }
+        .payment-item { display: flex; align-items: center; justify-content: space-between; padding: 15px 0; border-bottom: 1px solid #eee; cursor: pointer; transition: background 0.2s; }
+        .payment-item:active { background-color: #fcebf4; }
         .pay-left { display: flex; align-items: center; font-weight: 700; font-size: 1rem; }
-        .pay-icon { width: 35px; margin-right: 10px; font-size: 1.5rem; text-align: center; }
-
+        .pay-icon { width: 35px; margin-right: 10px; font-size: 1.5rem; text-align: center; color: #af094b; }
+        
         .btn-proceed { width: 90%; margin: 20px auto 40px auto; padding: 20px; border-radius: 50px; border: none; background-color: #af094b; color: white; font-size: 1.3rem; font-weight: 800; cursor: pointer; box-shadow: 0 5px 15px rgba(0,0,0,0.2); display: block; }
         .btn-proceed.success { background-color: #28a745; pointer-events: none; }
 
-        .chatbot-btn { position: absolute; bottom: 120px; right: 25px; font-size: 2rem; color: #af094b; cursor: pointer; z-index: 100; background: white; border-radius: 50%; width: 60px; height: 60px; display: flex; align-items: center; justify-content: center; box-shadow: 0 2px 10px rgba(0,0,0,0.2); }
+        /* Chatbot Button (Fixed Positioning) */
+        .chatbot-btn { position: absolute; bottom: 120px; right: 25px; width: 60px; height: 60px; background: transparent; border-radius: 50%; display: flex; align-items: center; justify-content: center; z-index: 1000; cursor: pointer; }
 
-        /* NAV SAMA MACAM HOME */
+        /* NAV */
         .bottom-nav { position: absolute; bottom: 0; width: 100%; background: #fcebf4; display: flex; justify-content: space-around; padding: 15px 0; border-top-left-radius: 25px; border-top-right-radius: 25px; box-shadow: 0 -2px 10px rgba(0,0,0,0.1); z-index: 2000; }
         .nav-item { display: flex; flex-direction: column; align-items: center; text-decoration: none; color: #888; font-size: 0.8rem; font-weight: 600; position: relative; width: 20%; }
         .nav-item i { font-size: 1.5rem; margin-bottom: 5px; }
@@ -57,7 +59,7 @@
         .wallet-circle { background: #af094b; width: 60px; height: 60px; border-radius: 50%; display: flex; align-items: center; justify-content: center; color: white; border: 5px solid white; margin-bottom: 5px; }
         .badge { position: absolute; top: -5px; right: 15px; background: #af094b; color: white; font-size: 0.7rem; padding: 3px 6px; border-radius: 10px; border: 2px solid white; }
 
-        /* MODAL STYLES (SAMA) */
+        /* Modal Chat Styles */
         .modal-overlay { position: absolute; bottom: 0; left: 0; width: 100%; height: 85%; background: white; border-top-left-radius: 25px; border-top-right-radius: 25px; box-shadow: 0 -5px 25px rgba(0,0,0,0.3); z-index: 3000; transform: translateY(110%); transition: transform 0.3s ease; display: flex; flex-direction: column; }
         .modal-overlay.show { transform: translateY(0); }
         .chat-header { background: #af094b; color: white; padding: 20px; border-top-left-radius: 25px; border-top-right-radius: 25px; display: flex; justify-content: space-between; align-items: center; font-weight: bold; font-size: 1.1rem; }
@@ -112,15 +114,28 @@
 
                         <div class="section-title">Payment Method:</div>
                         <div class="payment-list">
-                            <div class="payment-item selected" onclick="selectMethod(this)"><div class="pay-left"><i class="fab fa-apple pay-icon"></i> Apple Pay</div><i class="fas fa-chevron-right arrow-icon"></i></div>
-                            <div class="payment-item" onclick="selectMethod(this)"><div class="pay-left"><i class="fas fa-plus pay-icon"></i> Add Debit / Credit Card</div><i class="fas fa-chevron-right arrow-icon"></i></div>
-                            <div class="payment-item" onclick="selectMethod(this)"><div class="pay-left"><i class="fas fa-university pay-icon"></i> FPX</div><i class="fas fa-chevron-right arrow-icon"></i></div>
+                           <div class="payment-item" onclick="window.location.href='setup-apple-pay.html'">
+                            <div class="pay-left"><i class="fab fa-apple pay-icon"></i> Apple Pay</div>
+                            <i class="fas fa-chevron-right arrow-icon"></i>
+                        </div>
+                                                    
+                            <div class="payment-item" onclick="window.location.href='add-card.html'">
+                                <div class="pay-left"><i class="fas fa-plus pay-icon"></i> Add Debit / Credit Card</div>
+                                <i class="fas fa-chevron-right arrow-icon"></i>
+                            </div>
+                            
+                            <div class="payment-item" onclick="window.location.href='setup-fpx.html'">
+                                <div class="pay-left"><i class="fas fa-university pay-icon"></i> FPX / Online Banking</div>
+                                <i class="fas fa-chevron-right arrow-icon"></i>
+                            </div>
                         </div>
 
                         <button class="btn-proceed" id="proceedBtn" onclick="proceedTopup()">Proceed to Topup</button>
                     </div>
 
-                    <div class="chatbot-btn" onclick="openChat()"><i class="fas fa-comment-dots"></i></div>
+                    <div class="chatbot-btn" onclick="openChat()">
+                        <img src="shego-assistant.png" style="width: 180px; background-color: transparent;">
+                    </div>
 
                     <div class="bottom-nav">
                         <a href="home.html" class="nav-item"><i class="fas fa-home"></i>Home</a>
@@ -149,17 +164,32 @@
         function selectFixedAmount(amount, btn) { selectedTopup = amount; document.querySelectorAll('.amount-btn').forEach(b => b.classList.remove('active')); btn.classList.add('active'); document.getElementById('customInput').classList.remove('active'); document.getElementById('customInput').value = ''; }
         function activateInput() { document.querySelectorAll('.amount-btn').forEach(b => b.classList.remove('active')); selectedTopup = 0; const input = document.getElementById('customInput'); input.classList.add('active'); input.focus(); }
         function checkInput() { const input = document.getElementById('customInput'); if(input.value === '' || input.value <= 0) { input.classList.remove('active'); } else { selectedTopup = parseFloat(input.value); } }
-        function selectMethod(item) { document.querySelectorAll('.payment-item').forEach(i => i.classList.remove('selected')); item.classList.add('selected'); }
+        
         function proceedTopup() {
             const input = document.getElementById('customInput'); if(input.classList.contains('active') && input.value > 0) { selectedTopup = parseFloat(input.value); }
             if (selectedTopup <= 0) { alert("Please select topup amount!"); return; }
             const btn = document.getElementById('proceedBtn'); const originalText = "Proceed to Topup"; btn.innerText = "Processing...";
             setTimeout(() => { currentBalance += selectedTopup; document.getElementById('displayBalance').innerText = "RM " + currentBalance.toFixed(2); btn.innerText = "Topup Successful!"; btn.classList.add('success'); setTimeout(() => { btn.innerText = originalText; btn.classList.remove('success'); selectedTopup = 0; document.querySelectorAll('.amount-btn').forEach(b => b.classList.remove('active')); input.value = ''; input.classList.remove('active'); }, 2000); }, 1500);
         }
+
+        // --- FIXED CHAT FUNCTIONS ---
         function openChat() { document.getElementById('walletChatModal').classList.add('show'); }
         function closeChat() { document.getElementById('walletChatModal').classList.remove('show'); }
-        function sendMessage() { const input = document.getElementById('userMessage'); const msg = input.value; if(!msg) return; const body = document.getElementById('chatBody'); body.innerHTML += `<div class='chat-msg user'>${msg}</div>`; input.value = ''; body.scrollTop = body.scrollHeight; setTimeout(() => { body.innerHTML += `<div class='chat-msg agent'>I'm checking that for you.</div>`; body.scrollTop = body.scrollHeight; }, 1000); }
-        function connectHuman() { const body = document.getElementById('chatBody'); body.innerHTML += `<div style='text-align:center; color:#888; font-size:0.8rem;'>Connecting...</div>`; setTimeout(() => { body.innerHTML += `<div class='chat-msg agent' style='border:2px solid #af094b'>Hi! Sarah here.</div>`; body.scrollTop = body.scrollHeight; }, 2000); }
+        
+        function sendMessage() { 
+            const input = document.getElementById('userMessage'); const msg = input.value; 
+            if(!msg) return; 
+            const body = document.getElementById('chatBody'); 
+            body.innerHTML += `<div class='chat-msg user'>${msg}</div>`; 
+            input.value = ''; body.scrollTop = body.scrollHeight; 
+            setTimeout(() => { body.innerHTML += `<div class='chat-msg agent'>I'm checking that for you.</div>`; body.scrollTop = body.scrollHeight; }, 1000); 
+        }
+        
+        function connectHuman() { 
+            const body = document.getElementById('chatBody'); 
+            body.innerHTML += `<div style='text-align:center; color:#888; font-size:0.8rem;'>Connecting...</div>`; 
+            setTimeout(() => { body.innerHTML += `<div class='chat-msg agent' style='border:2px solid #af094b'>Hi! Sarah here.</div>`; body.scrollTop = body.scrollHeight; }, 2000); 
+        }
     </script>
 </body>
 </html>

@@ -16,9 +16,10 @@
         .dynamic-island { position: absolute; top: 20px; left: 50%; transform: translateX(-50%); width: 126px; height: 37px; background-color: #000; border-radius: 20px; z-index: 9999; }
 
         /* CONTENT CSS */
-        .screen-content { width: 100%; height: 100%; background-color: #f2f2f2; display: flex; flex-direction: column; }
+        /* Added position: relative here to fix absolute positioning of children */
+        .screen-content { width: 100%; height: 100%; background-color: #f2f2f2; display: flex; flex-direction: column; position: relative; }
         
-        .header { background-color: #af094b; padding: 20px; padding-top: 60px; display: flex; align-items: center; color: white; }
+        .header { background-color: #af094b; padding: 20px; padding-top: 60px; display: flex; align-items: center; color: white; z-index: 10; }
         .back-btn { font-size: 1.8rem; color: white; text-decoration: none; cursor: pointer; margin-right: 20px; margin-left: 10px; }
         .page-title { font-size: 1.4rem; font-weight: 800; }
 
@@ -36,7 +37,8 @@
         .driver-detail span { font-weight: 400; color: #555; }
         .rating { color: #FFD700; font-size: 1rem; margin-top: 5px; }
 
-        .chatbot-btn { position: absolute; bottom: 120px; right: 25px; width: 60px; height: 60px; background: white; border: 2px solid #af094b; border-radius: 50%; display: flex; align-items: center; justify-content: center; box-shadow: 0 4px 10px rgba(0,0,0,0.1); cursor: pointer; z-index: 100; font-size: 2.2rem; color: #af094b; }
+        /* Chatbot Button */
+        .chatbot-btn { position: absolute; bottom: 120px; right: 25px; width: 60px; height: 60px; background: transparent; border-radius: 50%; display: flex; align-items: center; justify-content: center; z-index: 1000; cursor: pointer; }
 
         /* NAV */
         .bottom-nav { position: absolute; bottom: 0; width: 100%; background: #fcebf4; display: flex; justify-content: space-around; padding: 15px 0; border-top-left-radius: 25px; border-top-right-radius: 25px; box-shadow: 0 -2px 10px rgba(0,0,0,0.05); z-index: 200; }
@@ -47,12 +49,13 @@
         .wallet-circle { background: #af094b; width: 60px; height: 60px; border-radius: 50%; display: flex; align-items: center; justify-content: center; color: white; border: 5px solid white; margin-bottom: 5px; }
         .badge { position: absolute; top: -5px; right: 15px; background: #af094b; color: white; font-size: 0.7rem; padding: 3px 6px; border-radius: 10px; border: 2px solid white; }
 
-        /* MODAL (ADVANCED) */
-        .modal-overlay { position: absolute; bottom: 0; left: 0; width: 100%; height: 85%; background: white; border-top-left-radius: 25px; border-top-right-radius: 25px; box-shadow: 0 -5px 25px rgba(0,0,0,0.3); z-index: 3000; transform: translateY(110%); transition: transform 0.3s ease; display: flex; flex-direction: column; }
+        /* Chat Modal */
+        .modal-overlay { position: absolute; bottom: 0; left: 0; width: 100%; height: 85%; background: white; border-top-left-radius: 30px; border-top-right-radius: 30px; z-index: 3000; transform: translateY(110%); transition: transform 0.3s ease; display: flex; flex-direction: column; box-shadow: 0 -10px 30px rgba(0,0,0,0.2); }
         .modal-overlay.show { transform: translateY(0); }
+        
         .chat-header { background: #af094b; color: white; padding: 20px; border-top-left-radius: 25px; border-top-right-radius: 25px; display: flex; justify-content: space-between; align-items: center; font-weight: bold; font-size: 1.1rem; }
         .robot-showcase { display: flex; align-items: center; justify-content: center; padding: 20px; background: #fdf2f8; border-bottom: 1px solid #eee; gap: 15px; }
-        .robot-circle { width: 70px; height: 70px; background: white; border-radius: 50%; display: flex; align-items: center; justify-content: center; border: 3px solid #af094b; font-size: 2.5rem; color: #af094b; }
+        .robot-circle { width: 70px; height: 70px; background: transparent; border-radius: 50%; display: flex; align-items: center; justify-content: center; border: 3px solid #af094b; font-size: 2.5rem; color: #af094b; }
         .robot-bubble { background: #00aaff; color: white; padding: 10px 15px; border-radius: 15px; border-bottom-left-radius: 0; font-size: 0.9rem; font-weight: 600; max-width: 180px; position: relative; }
         .robot-bubble::after { content: ''; position: absolute; bottom: -8px; left: 0; border-width: 10px 10px 0; border-style: solid; border-color: #00aaff transparent; display: block; width: 0; }
         .chat-body { flex-grow: 1; padding: 20px; background: white; overflow-y: auto; display: flex; flex-direction: column; gap: 10px; }
@@ -64,6 +67,7 @@
         .chat-input { flex-grow: 1; padding: 12px; border-radius: 20px; border: 1px solid #ccc; outline: none; background: #f5f5f5; }
         .btn-send { background: #af094b; color: white; border: none; width: 45px; height: 45px; border-radius: 50%; cursor: pointer; display: flex; align-items: center; justify-content: center; }
         .btn-live-agent { width: 100%; padding: 12px; border: 2px solid #af094b; border-radius: 50px; background: white; color: #af094b; font-weight: 700; cursor: pointer; display: flex; align-items: center; justify-content: center; gap: 8px; }
+   
     </style>
 </head>
 <body>
@@ -79,7 +83,7 @@
                     </div>
 
                     <div class="driver-list">
-                        <div class="driver-card" onclick="window.location.href='confirm-driver.html'">
+                        <div class="driver-card" onclick="window.location.href='confirm-driver-2.html'">
                             <img src="driver-photo-1.jpg" alt="Nadhira" class="driver-photo">
                             <div class="driver-info">
                                 <div class="driver-name">Nadhira Zafran</div>
@@ -89,7 +93,7 @@
                                 <div class="rating"><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="far fa-star"></i></div>
                             </div>
                         </div>
-                        <div class="driver-card" onclick="window.location.href='confirm-driver.html'">
+                        <div class="driver-card" onclick="window.location.href='confirm-driver-3.html'">
                             <img src="driver-photo-2.jpg" alt="Liu Mei Xuan" class="driver-photo">
                             <div class="driver-info">
                                 <div class="driver-name">Liu Mei Xuan</div>
@@ -99,7 +103,7 @@
                                 <div class="rating"><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i></div>
                             </div>
                         </div>
-                        <div class="driver-card" onclick="window.location.href='confirm-driver.html'">
+                        <div class="driver-card" onclick="window.location.href='confirm-driver-4.html'">
                             <img src="driver-photo-3.jpg" alt="Aisha" class="driver-photo">
                             <div class="driver-info">
                                 <div class="driver-name">Aisha Devi</div>
@@ -111,7 +115,9 @@
                         </div>
                     </div>
 
-                    <div class="chatbot-btn" onclick="openChat()"><i class="fas fa-comment-dots"></i></div>
+                    <div class="chatbot-btn" onclick="openchat()">
+                        <img src="shego-assistant.png" style="width: 180px; background-color: transparent;">
+                    </div>
 
                     <div class="bottom-nav">
                         <a href="home.html" class="nav-item"><i class="fas fa-home"></i>Home</a>
@@ -121,13 +127,13 @@
                         <a href="profile.html" class="nav-item"><i class="far fa-user-circle"></i>Profile</a>
                     </div>
 
-                    <div class="modal-overlay" id="driverChatModal">
-                        <div class="chat-header"><span>SheGO Assistant</span><i class="fas fa-times" style="cursor:pointer;" onclick="closeChat()"></i></div>
-                        <div class="robot-showcase"><div class="robot-circle"><i class="fas fa-robot"></i></div><div class="robot-bubble">Hello! Need help choosing a driver?</div></div>
+                    <div class="modal-overlay" id="homeChatModal">
+                        <div class="chat-header"><span>SheGO Assistant</span><i class="fas fa-times" style="cursor:pointer;" onclick="closechat()"></i></div>
+                        <div class="robot-showcase"><div class="robot-circle"><i class="fas fa-robot"></i></div><div class="robot-bubble">Hello! How may I help you?</div></div>
                         <div class="chat-body" id="chatBody"></div>
                         <div class="chat-input-area">
                             <button class="btn-live-agent" onclick="connectHuman()"><i class="fas fa-headset"></i> Chat with Real Person</button>
-                            <div class="input-row"><input type="text" class="chat-input" placeholder="Ask about drivers..." id="userMessage"><button class="btn-send" onclick="sendMessage()"><i class="fas fa-paper-plane"></i></button></div>
+                            <div class="input-row"><input type="text" class="chat-input" placeholder="Type message..." id="userMessage"><button class="btn-send" onclick="sendMessage()"><i class="fas fa-paper-plane"></i></button></div>
                         </div>
                     </div>
 
@@ -137,10 +143,28 @@
     </div>
 
     <script>
-        function openChat() { document.getElementById('driverChatModal').classList.add('show'); }
-        function closeChat() { document.getElementById('driverChatModal').classList.remove('show'); }
-        function sendMessage() { const i=document.getElementById('userMessage'); const m=i.value; if(!m)return; const b=document.getElementById('chatBody'); b.innerHTML+=`<div class='chat-msg user'>${m}</div>`; i.value=''; b.scrollTop=b.scrollHeight; setTimeout(()=>{b.innerHTML+=`<div class='chat-msg agent'>All drivers are verified.</div>`; b.scrollTop=b.scrollHeight;},1000); }
-        function connectHuman() { const b=document.getElementById('chatBody'); b.innerHTML+=`<div style='text-align:center;color:#888;'>Connecting...</div>`; setTimeout(()=>{b.innerHTML+=`<div class='chat-msg agent' style='border:2px solid #af094b'>Hi! Sarah here.</div>`; b.scrollTop=b.scrollHeight;},2000); }
-    </script>
+        function openchat() { document.getElementById('homeChatModal').classList.add('show'); }
+        function closechat() { document.getElementById('homeChatModal').classList.remove('show'); }
+        
+        function sendMessage() {
+            const input = document.getElementById('userMessage'); 
+            if(!input.value.trim()) return;
+            const body = document.getElementById('chatBody');
+            body.innerHTML += `<div class='chat-msg user'>${input.value}</div>`;
+            input.value = ''; body.scrollTop = body.scrollHeight;
+            setTimeout(() => { 
+                body.innerHTML += `<div class='chat-msg agent'>I can help you book a ride!</div>`; 
+                body.scrollTop = body.scrollHeight; 
+            }, 1000);
+        }
+        function connectHuman() {
+            const body = document.getElementById('chatBody');
+            body.innerHTML += `<div style='text-align:center; color:#888; font-size:0.8rem;'>Connecting...</div>`;
+            setTimeout(() => { 
+                body.innerHTML += `<div class='chat-msg agent' style='border:2px solid #af094b'>Hi! Sarah here.</div>`; 
+                body.scrollTop = body.scrollHeight; 
+            }, 2000);
+        }
+   </script>
 </body>
 </html>

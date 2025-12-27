@@ -16,24 +16,59 @@
         .dynamic-island { position: absolute; top: 20px; left: 50%; transform: translateX(-50%); width: 126px; height: 37px; background-color: #000; border-radius: 20px; z-index: 9999; }
 
         /* CONTENT CSS */
-        .screen-content { width: 100%; height: 100%; background-color: #fff; display: flex; flex-direction: column; }
-        .header { padding: 20px; padding-top: 60px; display: flex; align-items: center; justify-content: center; border-bottom: 1px solid #f0f0f0; }
-        .back-btn { position: absolute; left: 25px; font-size: 1.8rem; color: black; text-decoration: none; cursor: pointer; }
-        .page-title { font-size: 1.5rem; font-weight: 800; color: #af094b; }
-
-        .notif-list { flex-grow: 1; padding: 0; overflow-y: auto; padding-bottom: 100px; }
-        .notif-item { display: flex; align-items: flex-start; padding: 20px; border-bottom: 1px solid #f0f0f0; cursor: pointer; transition: background 0.2s; }
-        .notif-item:hover { background-color: #fff0f5; }
-        .notif-item.unread { background-color: #fdf2f8; } /* Highlight unread */
+        .screen-content { width: 100%; height: 100%; background-color: #f9f9f9; display: flex; flex-direction: column; }
         
-        .notif-icon { width: 50px; height: 50px; border-radius: 50%; background-color: #af094b; color: white; display: flex; align-items: center; justify-content: center; font-size: 1.2rem; margin-right: 15px; flex-shrink: 0; }
-        .notif-icon.promo { background-color: #FFD700; color: black; }
-        
-        .notif-content h4 { font-size: 1rem; font-weight: 700; margin-bottom: 5px; color: black; }
-        .notif-content p { font-size: 0.9rem; color: #666; line-height: 1.4; }
-        .notif-time { font-size: 0.75rem; color: #aaa; margin-top: 8px; font-weight: 600; }
+        .header { padding: 20px; padding-top: 60px; display: flex; flex-direction: column; background: white; box-shadow: 0 2px 10px rgba(0,0,0,0.05); z-index: 10; }
+        .header-top { display: flex; align-items: center; justify-content: center; position: relative; width: 100%; margin-bottom: 20px; }
+        .back-btn { position: absolute; left: 10px; font-size: 1.5rem; color: black; text-decoration: none; cursor: pointer; }
+        .page-title { font-size: 1.3rem; font-weight: 800; color: #af094b; }
+        .mark-read-btn { position: absolute; right: 10px; font-size: 0.85rem; color: #af094b; cursor: pointer; font-weight: 700; background: none; border: none; }
 
-        /* BOTTOM NAV */
+        /* TABS */
+        .tabs { display: flex; gap: 10px; padding: 0 10px; }
+        .tab-btn { padding: 8px 16px; border-radius: 20px; border: 1px solid #ddd; background: white; font-size: 0.9rem; font-weight: 600; color: #666; cursor: pointer; transition: all 0.2s; }
+        .tab-btn.active { background-color: #af094b; color: white; border-color: #af094b; box-shadow: 0 4px 10px rgba(175, 9, 75, 0.2); }
+
+        /* LIST */
+        .notif-list { flex-grow: 1; padding: 15px; overflow-y: auto; padding-bottom: 100px; }
+        
+        .notif-item { 
+            display: flex; align-items: flex-start; background: white; 
+            padding: 15px; border-radius: 15px; margin-bottom: 12px;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.03); cursor: pointer; 
+            transition: transform 0.1s; position: relative; overflow: hidden;
+        }
+        .notif-item:active { transform: scale(0.98); }
+        
+        /* UNREAD INDICATOR */
+        .notif-item.unread { border-left: 4px solid #af094b; background: #fff5fa; }
+        .unread-dot { width: 8px; height: 8px; background: #af094b; border-radius: 50%; position: absolute; top: 15px; right: 15px; }
+
+        .notif-icon { 
+            width: 45px; height: 45px; border-radius: 12px; background-color: #f0f0f0; 
+            color: #555; display: flex; align-items: center; justify-content: center; 
+            font-size: 1.2rem; margin-right: 15px; flex-shrink: 0; 
+        }
+        
+        /* Icon Colors */
+        .notif-item.type-promo .notif-icon { background-color: #fff8e1; color: #fbc02d; } /* Yellow */
+        .notif-item.type-system .notif-icon { background-color: #e3f2fd; color: #1976d2; } /* Blue */
+        .notif-item.type-success .notif-icon { background-color: #e8f5e9; color: #388e3c; } /* Green */
+
+        .notif-content { flex: 1; }
+        .notif-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 4px; }
+        .notif-title { font-size: 0.95rem; font-weight: 700; color: #333; }
+        .notif-desc { font-size: 0.85rem; color: #666; line-height: 1.4; margin-bottom: 8px; }
+        
+        .notif-meta { display: flex; justify-content: space-between; align-items: center; font-size: 0.75rem; color: #aaa; }
+        .notif-tag { background: #eee; padding: 2px 8px; border-radius: 4px; font-weight: 600; text-transform: uppercase; font-size: 0.65rem; }
+
+        /* EMPTY STATE */
+        .empty-state { text-align: center; padding: 40px 20px; display: none; }
+        .empty-state img { width: 150px; margin-bottom: 20px; opacity: 0.6; }
+        .empty-state p { color: #888; font-weight: 500; }
+
+        /* NAV */
         .bottom-nav { position: absolute; bottom: 0; width: 100%; background: #fcebf4; display: flex; justify-content: space-around; padding: 15px 0; border-top-left-radius: 25px; border-top-right-radius: 25px; box-shadow: 0 -2px 10px rgba(0,0,0,0.1); z-index: 2000; }
         .nav-item { display: flex; flex-direction: column; align-items: center; text-decoration: none; color: #888; font-size: 0.8rem; font-weight: 600; position: relative; width: 20%; }
         .nav-item i { font-size: 1.5rem; margin-bottom: 5px; }
@@ -51,42 +86,90 @@
                 <div class="screen-content">
                     
                     <div class="header">
-                        <a href="home.html" class="back-btn"><i class="fas fa-arrow-left"></i></a>
-                        <div class="page-title">Notifications</div>
+                        <div class="header-top">
+                            <a href="home.html" class="back-btn"><i class="fas fa-arrow-left"></i></a>
+                            <div class="page-title">Notifications</div>
+                            <button class="mark-read-btn" onclick="markAllRead()">Mark all read</button>
+                        </div>
+                        <div class="tabs">
+                            <div class="tab-btn active" onclick="filterNotifs('all', this)">All</div>
+                            <div class="tab-btn" onclick="filterNotifs('unread', this)">Unread</div>
+                            <div class="tab-btn" onclick="filterNotifs('promo', this)">Promos</div>
+                        </div>
                     </div>
 
-                    <div class="notif-list">
-                        <div class="notif-item unread">
+                    <div class="notif-list" id="notifList">
+                        
+                        <div class="notif-item unread type-success" data-type="all unread system">
                             <div class="notif-icon"><i class="fas fa-check"></i></div>
                             <div class="notif-content">
-                                <h4>Trip Completed</h4>
-                                <p>You have arrived at KLCC. Thank you for riding with SheGO!</p>
-                                <div class="notif-time">2 mins ago</div>
+                                <div class="notif-header">
+                                    <span class="notif-title">Trip Completed</span>
+                                </div>
+                                <p class="notif-desc">You have arrived at KLCC. Thank you for riding with SheGO!</p>
+                                <div class="notif-meta">
+                                    <span>2 mins ago</span>
+                                    <span class="notif-tag">Trip</span>
+                                </div>
                             </div>
+                            <div class="unread-dot"></div>
                         </div>
-                        <div class="notif-item unread">
-                            <div class="notif-icon promo"><i class="fas fa-tag"></i></div>
+
+                        <div class="notif-item unread type-promo" data-type="all unread promo">
+                            <div class="notif-icon"><i class="fas fa-tag"></i></div>
                             <div class="notif-content">
-                                <h4>50% OFF Promo!</h4>
-                                <p>Use code SHEGO50 for your next ride. Valid until Sunday.</p>
-                                <div class="notif-time">1 hour ago</div>
+                                <div class="notif-header">
+                                    <span class="notif-title">50% OFF Promo!</span>
+                                </div>
+                                <p class="notif-desc">Use code SHEGO50 for your next ride. Valid until Sunday.</p>
+                                <div class="notif-meta">
+                                    <span>1 hour ago</span>
+                                    <span class="notif-tag">Promo</span>
+                                </div>
                             </div>
+                            <div class="unread-dot"></div>
                         </div>
-                        <div class="notif-item">
+
+                        <div class="notif-item type-system" data-type="all system">
                             <div class="notif-icon"><i class="fas fa-wallet"></i></div>
                             <div class="notif-content">
-                                <h4>Topup Successful</h4>
-                                <p>RM 50.00 has been added to your SheWallet.</p>
-                                <div class="notif-time">Yesterday</div>
+                                <div class="notif-header">
+                                    <span class="notif-title">Topup Successful</span>
+                                </div>
+                                <p class="notif-desc">RM 50.00 has been successfully added to your SheWallet.</p>
+                                <div class="notif-meta">
+                                    <span>Yesterday</span>
+                                    <span class="notif-tag">Wallet</span>
+                                </div>
                             </div>
                         </div>
+
+                        <div class="notif-item type-promo" data-type="all promo">
+                            <div class="notif-icon"><i class="fas fa-gift"></i></div>
+                            <div class="notif-content">
+                                <div class="notif-header">
+                                    <span class="notif-title">Welcome Reward</span>
+                                </div>
+                                <p class="notif-desc">Here's a RM5 voucher to get you started.</p>
+                                <div class="notif-meta">
+                                    <span>2 days ago</span>
+                                    <span class="notif-tag">Promo</span>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="empty-state" id="emptyState">
+                            <i class="far fa-bell-slash" style="font-size: 3rem; color: #ccc; margin-bottom: 15px;"></i>
+                            <p>No notifications here!</p>
+                        </div>
+
                     </div>
 
                     <div class="bottom-nav">
                         <a href="home.html" class="nav-item"><i class="fas fa-home"></i>Home</a>
                         <a href="select-ride.html" class="nav-item"><i class="fas fa-map-marker-alt"></i>Trips</a>
                         <a href="shewallet.html" class="nav-item wallet-item"><div class="wallet-circle"><i class="fas fa-wallet"></i></div>SheWallet</a>
-                        <a href="notifications.html" class="nav-item active"><i class="fas fa-bell"></i><span class="badge">10</span>Notifications</a>
+                        <a href="notifications.html" class="nav-item active"><i class="fas fa-bell"></i><span class="badge" id="navBadge">2</span>Notifications</a>
                         <a href="profile.html" class="nav-item"><i class="far fa-user-circle"></i>Profile</a>
                     </div>
 
@@ -94,5 +177,39 @@
             </div>
         </div>
     </div>
+
+    <script>
+        function filterNotifs(type, btn) {
+            // Update Active Tab
+            document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+            btn.classList.add('active');
+
+            const items = document.querySelectorAll('.notif-item');
+            let visibleCount = 0;
+
+            items.forEach(item => {
+                const itemTypes = item.getAttribute('data-type');
+                if (itemTypes.includes(type)) {
+                    item.style.display = 'flex';
+                    visibleCount++;
+                } else {
+                    item.style.display = 'none';
+                }
+            });
+
+            // Show empty state if no items
+            document.getElementById('emptyState').style.display = visibleCount === 0 ? 'block' : 'none';
+        }
+
+        function markAllRead() {
+            document.querySelectorAll('.notif-item.unread').forEach(item => {
+                item.classList.remove('unread');
+                item.querySelector('.unread-dot')?.remove();
+            });
+            // Remove Badge
+            document.getElementById('navBadge').style.display = 'none';
+            alert("All notifications marked as read!");
+        }
+    </script>
 </body>
 </html>

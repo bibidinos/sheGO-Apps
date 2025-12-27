@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Add Card</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; }
+        body { background-color: #e0e0e0; display: flex; justify-content: center; align-items: center; min-height: 100vh; overflow: hidden; }
+        .mockup-wrapper { width: 100%; height: 100vh; display: flex; justify-content: center; align-items: center; }
+        .mockup-container { position: relative; width: 500px; height: 1020px; transform: scale(0.6); background-image: url('mockup-iphone.png'); background-size: contain; background-repeat: no-repeat; background-position: center; }
+        .phone-screen { position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); width: 440px; height: 956px; border-radius: 55px; overflow: hidden; background: #fff; display: flex; flex-direction: column; }
+        .dynamic-island { position: absolute; top: 20px; left: 50%; transform: translateX(-50%); width: 126px; height: 37px; background-color: #000; border-radius: 20px; z-index: 9999; }
+
+        .header { padding: 20px; padding-top: 60px; display: flex; align-items: center; justify-content: center; position: relative; }
+        .back-btn { position: absolute; left: 25px; font-size: 1.8rem; color: black; text-decoration: none; cursor: pointer; }
+        .page-title { font-size: 1.8rem; font-weight: 800; color: #af094b; }
+
+        .content { padding: 30px; }
+        .input-group { margin-bottom: 20px; }
+        .label { font-weight: 700; color: #555; margin-bottom: 8px; display: block; }
+        .input-field { width: 100%; padding: 15px; border: 1px solid #ccc; border-radius: 10px; font-size: 1rem; }
+        .save-btn { width: 100%; padding: 20px; border-radius: 50px; border: none; background-color: #af094b; color: white; font-size: 1.3rem; font-weight: 800; cursor: pointer; margin-top: 20px; }
+    </style>
+</head>
+<body>
+    <div class="mockup-wrapper">
+        <div class="mockup-container">
+            <div class="phone-screen">
+                <div class="dynamic-island"></div>
+                <div class="header">
+                    <a href="shewallet.html" class="back-btn"><i class="fas fa-arrow-left"></i></a>
+                    <div class="page-title">Add Card</div>
+                </div>
+                <div class="content">
+                    <div class="input-group">
+                        <label class="label">Card Number</label>
+                        <input type="text" class="input-field" placeholder="0000 0000 0000 0000">
+                    </div>
+                    <div class="input-group" style="display:flex; gap:15px;">
+                        <div style="flex:1;">
+                            <label class="label">Expiry</label>
+                            <input type="text" class="input-field" placeholder="MM/YY">
+                        </div>
+                        <div style="flex:1;">
+                            <label class="label">CVV</label>
+                            <input type="password" class="input-field" placeholder="123">
+                        </div>
+                    </div>
+                    <button class="save-btn" onclick="alert('Card Saved!'); window.location.href='shewallet.html'">Save Card</button>
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+</html>

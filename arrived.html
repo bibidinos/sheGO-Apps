@@ -23,13 +23,28 @@
         .banner-title { font-size: 1.8rem; font-weight: 800; margin-bottom: 5px; }
         .banner-subtitle { font-size: 1rem; opacity: 0.9; }
 
-        .content-card { background: white; width: 90%; margin: -30px auto 20px auto; border-radius: 20px; padding: 20px; box-shadow: 0 5px 15px rgba(0,0,0,0.1); }
-        .destination-img { width: 100%; height: 200px; object-fit: cover; border-radius: 15px; margin-bottom: 15px; }
-        .destination-title { font-size: 1.4rem; font-weight: 800; color: #af094b; margin-bottom: 5px; }
-        .destination-address { font-size: 0.95rem; color: #555; line-height: 1.3; }
-        .divider { border-bottom: 1px solid #eee; margin: 15px 0; }
-        .fare-info { text-align: center; font-size: 1.2rem; font-weight: 700; color: black; margin-bottom: 20px; }
-        .fare-amount { font-size: 2rem; font-weight: 800; color: #af094b; }
+        .content-card { background: white; width: 90%; margin: -30px auto 20px auto; border-radius: 20px; padding: 30px 25px; box-shadow: 0 5px 15px rgba(0,0,0,0.1); text-align: center; }
+        
+        .destination-title { font-size: 1.6rem; font-weight: 800; color: #af094b; margin-bottom: 10px; line-height: 1.2; }
+        .destination-address { font-size: 1rem; color: #555; line-height: 1.4; margin-bottom: 20px; }
+        
+        .divider { border-bottom: 1px solid #eee; margin: 20px 0; }
+        
+        /* VOUCHER SECTION (NEW) */
+        .voucher-row {
+            display: flex; justify-content: space-between; align-items: center;
+            background-color: #fff0f5; padding: 15px; border-radius: 12px;
+            margin-bottom: 20px; border: 1px dashed #af094b; cursor: pointer;
+        }
+        .voucher-left { display: flex; align-items: center; gap: 10px; font-weight: 700; color: #af094b; }
+        .voucher-right { font-size: 0.9rem; color: #666; }
+        .discount-text { color: #28a745; font-weight: 800; display: none; }
+
+        .fare-info { font-size: 1.2rem; font-weight: 700; color: black; margin-bottom: 5px; }
+        .distance-info { font-size: 0.9rem; color: #666; margin-bottom: 25px; }
+        
+        .fare-amount { font-size: 2.5rem; font-weight: 800; color: #af094b; display: block; margin-top: 5px; }
+        .fare-original { text-decoration: line-through; color: #999; font-size: 1.5rem; margin-right: 10px; display: none; }
 
         .btn-rate-pay { width: 100%; padding: 18px; border-radius: 50px; border: none; background-color: #af094b; color: white; font-size: 1.2rem; font-weight: 800; cursor: pointer; margin-bottom: 15px; transition: background-color 0.3s ease; }
         .btn-rate-pay:hover { opacity: 0.9; }
@@ -61,18 +76,38 @@
                     </div>
 
                     <div class="content-card">
-                        <img src="klcc.jpg" alt="KLCC" class="destination-img">
-                        <div class="destination-title">KLCC</div>
-                        <div class="destination-address">Persiaran Petronas, Kuala Lumpur City Centre, 50088 Kuala Lumpur</div>
+                        
+                        <div class="destination-title" id="destTitle">Loading...</div>
+                        <div class="destination-address" id="destAddress">Fetching location...</div>
+                        
                         <div class="divider"></div>
-                        <div class="fare-info">Your Fare: <span class="fare-amount">RM 40</span></div>
+
+                        <div class="voucher-row" onclick="window.location.href='vouchers.html'">
+                            <div class="voucher-left">
+                                <i class="fas fa-ticket-alt"></i>
+                                <span id="voucherLabel">Apply Promo Code</span>
+                            </div>
+                            <div class="voucher-right" id="voucherRight">
+                                <i class="fas fa-chevron-right"></i>
+                            </div>
+                        </div>
+                        
+                        <div class="fare-info">
+                            Your Fare 
+                            <div style="margin-top:5px;">
+                                <span class="fare-original" id="originalPrice">RM 0.00</span>
+                                <span class="fare-amount" id="fareDisplay">RM 0.00</span>
+                            </div>
+                        </div>
+                        <div class="distance-info" id="distDisplay">Total Distance: 0 km</div>
+
                         <button class="btn-rate-pay" id="ratePayBtn" onclick="handleRatePay()">Rate & Pay Now</button>
-                        <button class="btn-view-detail" onclick="window.location.href='feedback-driver.html'">View Trip Detail</button>
+                        <button class="btn-view-detail" onclick="handleViewDetail()">View Trip Detail</button>
                     </div>
 
                     <div class="bottom-nav">
                         <a href="home.html" class="nav-item"><i class="fas fa-home"></i>Home</a>
-                        <a href="#" class="nav-item active"><i class="fas fa-map-marker-alt"></i>Trips</a>
+                        <a href="trip-detail.html" class="nav-item active"><i class="fas fa-map-marker-alt"></i>Trips</a>
                         <a href="shewallet.html" class="nav-item wallet-item"><div class="wallet-circle"><i class="fas fa-wallet"></i></div>SheWallet</a>
                         <a href="notifications.html" class="nav-item"><i class="fas fa-bell"></i><span class="badge">10</span>Notifications</a>
                         <a href="profile.html" class="nav-item"><i class="far fa-user-circle"></i>Profile</a>
@@ -84,11 +119,88 @@
     </div>
 
     <script>
+        // --- 1. HAVERSINE FORMULA TO CALCULATE DISTANCE (KM) ---
+        function getDistanceFromLatLonInKm(lat1, lon1, lat2, lon2) {
+            var R = 6371; 
+            var dLat = deg2rad(lat2-lat1);
+            var dLon = deg2rad(lon2-lon1); 
+            var a = Math.sin(dLat/2) * Math.sin(dLat/2) + Math.cos(deg2rad(lat1)) * Math.cos(deg2rad(lat2)) * Math.sin(dLon/2) * Math.sin(dLon/2); 
+            var c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1-a)); 
+            return R * c; 
+        }
+        function deg2rad(deg) { return deg * (Math.PI/180) }
+
+        // --- 2. EXECUTE ON PAGE LOAD ---
+        window.onload = function() {
+            // Retrieve stored data
+            const pickupLat = parseFloat(localStorage.getItem('shego_pickup_lat')) || 3.1475;
+            const pickupLng = parseFloat(localStorage.getItem('shego_pickup_lng')) || 101.6995;
+            const dropoffLat = parseFloat(localStorage.getItem('shego_dropoff_lat')) || 3.1579;
+            const dropoffLng = parseFloat(localStorage.getItem('shego_dropoff_lng')) || 101.7116;
+            const dropoffName = localStorage.getItem('shego_dropoff_name') || "Suria KLCC, Kuala Lumpur";
+
+            // Calculate Base Price
+            const distanceKm = getDistanceFromLatLonInKm(pickupLat, pickupLng, dropoffLat, dropoffLng);
+            let basePrice = distanceKm * 1.00;
+            if(basePrice < 3) basePrice = 3.00; // Minimum fare
+
+            // Check for Voucher
+            const discountAmount = parseFloat(localStorage.getItem('shego_voucher_amount')) || 0;
+            const discountName = localStorage.getItem('shego_voucher_name');
+
+            let finalPrice = basePrice - discountAmount;
+            if(finalPrice < 0) finalPrice = 0;
+
+            // Update UI - Address
+            document.getElementById('destTitle').innerText = dropoffName.split(',')[0];
+            document.getElementById('destAddress').innerText = dropoffName;
+            document.getElementById('distDisplay').innerText = "Total Distance: " + distanceKm.toFixed(1) + " km";
+
+            // Update UI - Price & Voucher
+            if(discountAmount > 0) {
+                document.getElementById('originalPrice').style.display = 'inline';
+                document.getElementById('originalPrice').innerText = "RM " + basePrice.toFixed(2);
+                document.getElementById('fareDisplay').innerText = "RM " + finalPrice.toFixed(2);
+                
+                // Update Voucher Button State
+                document.getElementById('voucherLabel').innerText = discountName + " (-RM" + discountAmount + ")";
+                document.getElementById('voucherLabel').style.color = "#28a745"; // Green text
+                document.getElementById('voucherRight').innerHTML = '<i class="fas fa-times-circle" style="color:red;" onclick="removeVoucher(event)"></i>';
+            } else {
+                document.getElementById('fareDisplay').innerText = "RM " + basePrice.toFixed(2);
+            }
+        };
+
+        // --- 3. LOGIC ---
+        function removeVoucher(e) {
+            e.stopPropagation(); // Prevent clicking the parent div
+            localStorage.removeItem('shego_voucher_amount');
+            localStorage.removeItem('shego_voucher_name');
+            location.reload(); // Refresh to remove discount
+        }
+
         function handleRatePay() {
             const btn = document.getElementById('ratePayBtn');
-            btn.innerText = "Payment Successful!";
+            btn.innerHTML = '<i class="fas fa-check"></i> Payment Successful!';
             btn.classList.add('success');
-            setTimeout(() => { window.location.href = "feedback-driver.html"; }, 1500);
+            
+            setTimeout(() => {
+                // Clear voucher after use
+                localStorage.removeItem('shego_voucher_amount');
+                localStorage.removeItem('shego_voucher_name');
+
+                const driverId = localStorage.getItem('shego_driver_id');
+                if (driverId === '2') window.location.href = "feedback-driver-2.html";
+                else if (driverId === '3') window.location.href = "feedback-driver-3.html";
+                else window.location.href = "feedback-driver-1.html";
+            }, 1500);
+        }
+
+        function handleViewDetail() {
+             const driverId = localStorage.getItem('shego_driver_id');
+             if (driverId === '2') window.location.href = "feedback-driver-2.html";
+             else if (driverId === '3') window.location.href = "feedback-driver-3.html";
+             else window.location.href = "feedback-driver-1.html";
         }
     </script>
 </body>

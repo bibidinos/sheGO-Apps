@@ -1,0 +1,193 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SheGO - Set Location & Payment</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        /* FRAME CSS - MAINTAINED AS REQUESTED */
+        * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; }
+        body { background-color: #e0e0e0; display: flex; justify-content: center; align-items: center; min-height: 100vh; overflow: hidden; }
+        .mockup-wrapper { width: 100%; height: 100vh; display: flex; justify-content: center; align-items: center; }
+        .mockup-container { position: relative; width: 500px; height: 1020px; transform: scale(0.6); transform-origin: center center; background-image: url('mockup-iphone.png'); background-size: contain; background-repeat: no-repeat; background-position: center; }
+        .phone-screen { position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); width: 440px; height: 956px; border-radius: 55px; overflow: hidden; box-shadow: inset 0 0 20px rgba(0,0,0,0.2); background: #fff; }
+        .dynamic-island { position: absolute; top: 20px; left: 50%; transform: translateX(-50%); width: 126px; height: 37px; background-color: #000; border-radius: 20px; z-index: 9999; }
+
+        /* HEADER & SEARCH */
+        .location-header { padding: 60px 20px 20px; background: white; border-bottom: 1px solid #eee; }
+        .back-row { display: flex; align-items: center; margin-bottom: 20px; }
+        .back-btn { font-size: 1.5rem; color: black; text-decoration: none; margin-right: 20px; }
+        
+        .search-container { position: relative; padding-left: 40px; }
+        .dots-indicator { position: absolute; left: 10px; top: 15px; bottom: 15px; width: 2px; display: flex; flex-direction: column; align-items: center; justify-content: space-between; }
+        .dot-blue { width: 12px; height: 12px; background: #007bff; border-radius: 50%; }
+        .dot-red { width: 12px; height: 12px; background: #af094b; border-radius: 2px; }
+        .line { flex: 1; width: 2px; border-left: 2px dotted #ccc; margin: 5px 0; }
+
+        .input-box { width: 100%; background: #f5f5f5; border: 1px solid #eee; border-radius: 12px; padding: 12px 15px; margin-bottom: 10px; font-size: 1rem; display: flex; align-items: center; }
+        .input-box input { border: none; background: transparent; outline: none; width: 100%; font-weight: 500; }
+        .input-box.active-input { border: 2px solid #00a559; background: white; }
+
+        /* RECENT LOCATIONS */
+        .recent-list { padding: 10px 20px; height: 400px; overflow-y: auto; }
+        .recent-item { display: flex; align-items: flex-start; padding: 15px 0; border-bottom: 1px solid #eee; cursor: pointer; }
+        .recent-icon { width: 40px; font-size: 1.2rem; color: #666; padding-top: 3px; }
+        .recent-text h4 { font-size: 1rem; color: #333; margin-bottom: 2px; }
+        .recent-text p { font-size: 0.85rem; color: #888; }
+
+        /* PAYMENT SELECTION OVERLAY */
+        #paymentOverlay { position: absolute; bottom: -100%; left: 0; width: 100%; height: 85%; background: white; z-index: 1000; transition: 0.4s ease; border-top-left-radius: 30px; border-top-right-radius: 30px; box-shadow: 0 -10px 30px rgba(0,0,0,0.1); padding: 25px; }
+        #paymentOverlay.active { bottom: 0; }
+        .payment-title { font-size: 1.4rem; font-weight: 800; color: #af094b; margin-bottom: 25px; text-align: center; }
+        
+        .wallet-card { background: #af094b; color: white; border-radius: 20px; padding: 20px; margin-bottom: 25px; display: flex; justify-content: space-between; align-items: center; }
+        .payment-option { border: 2px solid #eee; border-radius: 15px; padding: 15px; margin-bottom: 15px; display: flex; align-items: center; cursor: pointer; position: relative; }
+        .payment-option.selected { border-color: #af094b; }
+        .payment-option i { font-size: 1.5rem; width: 40px; color: #af094b; }
+        .check-icon { position: absolute; right: 20px; color: #af094b; display: none; }
+        .payment-option.selected .check-icon { display: block; }
+        
+        .add-payment { border: 2px dashed #af094b; color: #af094b; text-align: center; padding: 15px; border-radius: 50px; font-weight: 700; margin-top: 10px; cursor: pointer; }
+
+        /* BOTTOM BOOKING BAR */
+        .bottom-bar { position: absolute; bottom: 0; width: 100%; padding: 20px 25px 40px; background: white; border-top: 1px solid #eee; }
+        .pay-trigger { display: flex; justify-content: space-between; align-items: center; padding: 12px 0; cursor: pointer; margin-bottom: 10px; }
+        .confirm-btn { background: #00a559; color: white; border: none; width: 100%; padding: 18px; border-radius: 15px; font-size: 1.2rem; font-weight: 800; }
+    </style>
+</head>
+<body>
+
+    <div class="mockup-wrapper">
+        <div class="mockup-container">
+            <div class="phone-screen">
+                <div class="dynamic-island"></div>
+                
+                <div class="location-header">
+                    <div class="back-row">
+                        <a href="#" class="back-btn"><i class="fas fa-arrow-left"></i></a>
+                        <h2 style="font-weight: 800;">Plan Your Route</h2>
+                    </div>
+                    
+                    <div class="search-container">
+                        <div class="dots-indicator">
+                            <div class="dot-blue"></div>
+                            <div class="line"></div>
+                            <div class="dot-red"></div>
+                        </div>
+                        <div class="input-box">
+                            <input type="text" value="Current Location" placeholder="Pickup location">
+                        </div>
+                        <div class="input-box active-input">
+                            <input type="text" id="dropoffInput" placeholder="Find airports by flight no.">
+                            <i class="fas fa-camera" style="color: #666;"></i>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="recent-list">
+                    <div class="recent-item" onclick="selectLocation('Kolej Casuarina - Block C1')">
+                        <div class="recent-icon"><i class="fas fa-clock"></i></div>
+                        <div class="recent-text">
+                            <h4>Kolej Casuarina - Block C1</h4>
+                            <p>5.64km • Block C1, Jalan Casuarina, UiTM Puncak Alam</p>
+                        </div>
+                    </div>
+                    <div class="recent-item" onclick="selectLocation('Exchange 106 @ TRX')">
+                        <div class="recent-icon"><i class="fas fa-clock"></i></div>
+                        <div class="recent-text">
+                            <h4>Exchange 106 @ TRX</h4>
+                            <p>33km • Lingkaran TRX, Kuala Lumpur</p>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="bottom-bar">
+                    <div class="pay-trigger" onclick="togglePayment()">
+                        <div id="selectedPayDisplay">
+                            <i class="fab fa-apple-pay" style="font-size: 1.4rem;"></i> Apple Pay
+                        </div>
+                        <span style="color: #af094b; font-weight: 700;">Change <i class="fas fa-chevron-up"></i></span>
+                    </div>
+                    <button class="confirm-btn">Confirm Destination</button>
+                </div>
+
+                <div id="paymentOverlay">
+                    <div class="drag-handle" style="width: 40px; height: 5px; background: #ddd; border-radius: 10px; margin: -10px auto 20px;"></div>
+                    <h2 class="payment-title">Payment Methods</h2>
+                    
+                    <div class="wallet-card">
+                        <div>
+                            <p style="font-size: 0.9rem; opacity: 0.9;">SheWallet Balance</p>
+                            <h2 style="font-size: 1.8rem;">RM 52.90</h2>
+                        </div>
+                        <button style="background: white; color: #af094b; border: none; padding: 8px 15px; border-radius: 20px; font-weight: 800;">Top Up</button>
+                    </div>
+
+                    <h4 style="margin-bottom: 15px;">Saved Methods</h4>
+                    
+                    <div class="payment-option selected" onclick="setPayment(this, 'Apple Pay', 'fab fa-apple-pay')">
+                        <i class="fab fa-apple-pay"></i>
+                        <div>
+                            <div style="font-weight: 800;">Apple Pay</div>
+                            <div style="font-size: 0.8rem; color: #666;">Primary Payment</div>
+                        </div>
+                        <i class="fas fa-check-circle check-icon"></i>
+                    </div>
+
+                    <div class="payment-option" onclick="setPayment(this, 'Visa •••• 4242', 'fas fa-credit-card')">
+                        <i class="fas fa-credit-card"></i>
+                        <div>
+                            <div style="font-weight: 800;">Visa •••• 4242</div>
+                            <div style="font-size: 0.8rem; color: #666;">Expires 12/26</div>
+                        </div>
+                        <i class="fas fa-check-circle check-icon"></i>
+                    </div>
+
+                    <div class="payment-option" onclick="setPayment(this, 'Cash', 'fas fa-money-bill-wave')">
+                        <i class="fas fa-money-bill-wave"></i>
+                        <div>
+                            <div style="font-weight: 800;">Cash</div>
+                            <div style="font-size: 0.8rem; color: #666;">Pay in car</div>
+                        </div>
+                        <i class="fas fa-check-circle check-icon"></i>
+                    </div>
+
+                    <div class="add-payment">
+                        + Add New Payment Method
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Function to toggle Payment Modal
+        function togglePayment() {
+            document.getElementById('paymentOverlay').classList.toggle('active');
+        }
+
+        // Function to handle payment selection logic
+        function setPayment(element, name, iconClass) {
+            // Remove selection from all
+            document.querySelectorAll('.payment-option').forEach(opt => opt.classList.remove('selected'));
+            // Add to current
+            element.classList.add('selected');
+            
+            // Update the display on the main booking bar
+            document.getElementById('selectedPayDisplay').innerHTML = `
+                <i class="${iconClass}" style="font-size: 1.4rem;"></i> ${name}
+            `;
+            
+            // Close modal after selection
+            setTimeout(togglePayment, 300);
+        }
+
+        // Handle location selection
+        function selectLocation(name) {
+            document.getElementById('dropoffInput').value = name;
+        }
+    </script>
+</body>
+</html>

@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>6 Seater - SheGO</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        /* Shared Mockup Framework */
+        * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Segoe UI', sans-serif; }
+        body { background-color: #e0e0e0; display: flex; justify-content: center; align-items: center; min-height: 100vh; overflow: hidden; }
+        .mockup-container { position: relative; width: 500px; height: 1020px; transform: scale(0.6); background-image: url('mockup-iphone.png'); background-size: contain; background-repeat: no-repeat; background-position: center; }
+        .phone-screen { position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); width: 440px; height: 956px; border-radius: 55px; overflow: hidden; background: #fff; }
+        .dynamic-island { position: absolute; top: 20px; left: 50%; transform: translateX(-50%); width: 126px; height: 37px; background-color: #000; border-radius: 20px; z-index: 9999; }
+        .screen-content { width: 100%; height: 100%; display: flex; flex-direction: column; overflow-y: auto; padding-bottom: 90px; }
+
+        /* Page Specific Styles */
+        .header-bar { padding: 60px 25px 20px; display: flex; align-items: center; }
+        .back-btn { font-size: 1.5rem; color: #333; text-decoration: none; margin-right: 20px; }
+        
+        .hero-img { width: 100%; height: 250px; object-fit: cover; }
+        .main-content { padding: 25px; }
+        .category-label { color: #af094b; font-weight: 700; text-transform: uppercase; letter-spacing: 1px; font-size: 0.9rem; }
+        h1 { font-size: 2.2rem; font-weight: 800; margin: 10px 0; color: #000; }
+        .desc { color: #666; font-size: 1.1rem; line-height: 1.5; margin-bottom: 30px; }
+
+        .feature-row { display: flex; align-items: center; margin-bottom: 20px; }
+        .feature-icon { width: 50px; height: 50px; background: #fcebf4; border-radius: 12px; display: flex; align-items: center; justify-content: center; color: #af094b; font-size: 1.2rem; margin-right: 15px; }
+        .feature-info h4 { font-size: 1.1rem; color: #333; }
+        .feature-info p { font-size: 0.9rem; color: #888; }
+
+        .btn-book { position: absolute; bottom: 120px; left: 50%; transform: translateX(-50%); width: 85%; padding: 20px; background: #af094b; color: #fff; border: none; border-radius: 50px; font-size: 1.2rem; font-weight: 800; cursor: pointer; }
+    </style>
+</head>
+<body>
+    <div class="mockup-container">
+        <div class="phone-screen">
+            <div class="dynamic-island"></div>
+            <div class="screen-content">
+                <div class="header-bar">
+                    <a href="home.html" class="back-btn"><i class="fas fa-chevron-left"></i></a>
+                    <h2 style="font-size: 1.2rem;">Vehicle Details</h2>
+                </div>
+                
+                <img src="6seater.jpg" alt="6 Seater Car" class="hero-img">
+
+                <div class="main-content">
+                    <p class="category-label">Spacious Travel</p>
+                    <h1>SheGO 6-Seater</h1>
+                    <p class="desc">Perfect for family outings or group travels. Enjoy extra legroom and a premium experience with our verified female drivers.</p>
+
+                    <div class="feature-row">
+                        <div class="feature-icon"><i class="fas fa-users"></i></div>
+                        <div class="feature-info">
+                            <h4>Up to 6 Passengers</h4>
+                            <p>Comfortable seating for the whole group.</p>
+                        </div>
+                    </div>
+
+                    <div class="feature-row">
+                        <div class="feature-icon"><i class="fas fa-suitcase"></i></div>
+                        <div class="feature-info">
+                            <h4>Extra Luggage Space</h4>
+                            <p>Fits 3-4 large suitcases easily.</p>
+                        </div>
+                    </div>
+                </div>
+
+                <button class="btn-book">Book 6-Seater</button>
+            </div>
+        </div>
+    </div>
+</body>
+</html>

@@ -21,27 +21,35 @@
         
         .top-search-bar { background-color: #af094b; padding: 20px; padding-top: 60px; display: flex; align-items: center; justify-content: space-between; color: white; z-index: 1000; }
         .back-arrow { font-size: 1.8rem; margin-right: 15px; cursor: pointer; }
-        .search-box { flex-grow: 1; font-size: 1.2rem; font-weight: 500; }
-        .search-icon { font-size: 1.4rem; }
+        
+        .search-input-wrapper { flex-grow: 1; display: flex; align-items: center; border-bottom: 1px solid rgba(255,255,255,0.5); padding-bottom: 5px; }
+        .search-input { background: transparent; border: none; font-size: 1.1rem; color: white; width: 100%; outline: none; font-weight: 500; }
+        .search-input::placeholder { color: rgba(255,255,255,0.7); }
+        .search-icon { font-size: 1.4rem; cursor: pointer; margin-left: 10px; }
 
         #map-container { flex-grow: 1; width: 100%; position: relative; }
-        #map { width: 100%; height: 100%; background: #ddd; }
+        #map { width: 100%; height: 100%; background: #ddd; cursor: grab; } 
+        
+        /* Center Pin */
         .center-pin-container { position: absolute; top: 50%; left: 50%; transform: translate(-50%, -100%); z-index: 900; pointer-events: none; display: flex; flex-direction: column; align-items: center; }
-        .custom-marker { width: 60px; height: 60px; background: rgba(80, 80, 80, 0.8); border: 2px solid white; border-radius: 50%; display: flex; align-items: center; justify-content: center; color: white; font-size: 1.8rem; margin-bottom: 5px; box-shadow: 0 4px 6px rgba(0,0,0,0.3); }
+        .custom-marker { width: 60px; height: 60px; background: rgba(80, 80, 80, 0.9); border: 2px solid white; border-radius: 50%; display: flex; align-items: center; justify-content: center; color: white; font-size: 1.8rem; margin-bottom: 5px; box-shadow: 0 4px 6px rgba(0,0,0,0.3); }
         .pin-point { width: 12px; height: 12px; background: #555; border-radius: 50%; }
+        .pin-label { background: white; padding: 4px 10px; border-radius: 10px; font-size: 0.9rem; font-weight: bold; margin-top: 5px; box-shadow: 0 2px 5px rgba(0,0,0,0.2); white-space: nowrap; max-width: 200px; overflow: hidden; text-overflow: ellipsis;}
 
         .detail-panel { background: white; padding: 25px; padding-bottom: 120px; border-top-left-radius: 30px; border-top-right-radius: 30px; box-shadow: 0 -5px 15px rgba(0,0,0,0.1); position: relative; z-index: 1000; }
-        .location-card { border: 2px solid #af094b; border-radius: 20px; padding: 15px; margin-bottom: 20px; display: flex; align-items: flex-start; background: white; }
-        .loc-icon { color: #af094b; font-size: 2rem; margin-right: 20px; margin-top: 5px; }
-        .loc-info h3 { font-size: 1.1rem; font-weight: 800; color: #af094b; margin-bottom: 5px; text-transform: uppercase; }
-        .loc-info p { font-size: 0.95rem; color: #af094b; font-weight: 600; line-height: 1.3; }
+        
+        .location-card { border: 2px solid #ddd; border-radius: 20px; padding: 15px; margin-bottom: 15px; display: flex; align-items: flex-start; background: #f9f9f9; cursor: pointer; transition: 0.3s; }
+        .location-card.active { border-color: #af094b; background: #fff5fa; box-shadow: 0 4px 10px rgba(175, 9, 75, 0.15); }
+        
+        .loc-icon { color: #888; font-size: 2rem; margin-right: 20px; margin-top: 5px; }
+        .location-card.active .loc-icon { color: #af094b; }
+
+        .loc-info h3 { font-size: 1rem; font-weight: 800; color: #888; margin-bottom: 5px; text-transform: uppercase; }
+        .location-card.active .loc-info h3 { color: #af094b; }
+        .loc-info p { font-size: 0.95rem; color: #333; font-weight: 600; line-height: 1.3; }
 
         .btn-confirm { width: 100%; background-color: #af094b; color: white; border: none; padding: 20px; border-radius: 50px; font-size: 1.2rem; font-weight: 800; cursor: pointer; margin-top: 10px; box-shadow: 0 4px 10px rgba(0,0,0,0.2); }
-        .btn-confirm:hover { opacity: 0.9; }
 
-        .chatbot-btn { position: absolute; bottom: 30px; right: 20px; font-size: 2.2rem; color: #af094b; cursor: pointer; z-index: 100; }
-
-        /* NAV */
         .bottom-nav { position: absolute; bottom: 0; width: 100%; background: #fcebf4; display: flex; justify-content: space-around; padding: 15px 0; border-top-left-radius: 25px; border-top-right-radius: 25px; box-shadow: 0 -2px 10px rgba(0,0,0,0.05); z-index: 2000; }
         .nav-item { display: flex; flex-direction: column; align-items: center; text-decoration: none; color: #888; font-size: 0.8rem; font-weight: 600; position: relative; width: 20%; }
         .nav-item i { font-size: 1.5rem; margin-bottom: 5px; }
@@ -60,36 +68,39 @@
                     
                     <div class="top-search-bar">
                         <a href="select-ride.html" style="color:white; text-decoration:none;"><i class="fas fa-arrow-left back-arrow"></i></a>
-                        <div class="search-box">Search</div>
-                        <i class="fas fa-search search-icon"></i>
+                        <div class="search-input-wrapper">
+                            <input type="text" id="topSearchInput" class="search-input" placeholder="Search location (e.g. KLCC)...">
+                        </div>
+                        <i class="fas fa-search search-icon" onclick="triggerTopSearch()"></i>
                     </div>
 
                     <div id="map-container">
                         <div id="map"></div>
                         <div class="center-pin-container">
-                            <div class="custom-marker"><i class="far fa-building"></i></div>
+                            <div class="custom-marker" id="pinIcon"><i class="fas fa-map-marker-alt"></i></div>
                             <div class="pin-point"></div>
-                            <div style="background:white; padding:4px 10px; border-radius:10px; font-size:0.9rem; font-weight:bold; margin-top:5px; box-shadow:0 2px 5px rgba(0,0,0,0.2);">Maybank Tower</div>
+                            <div class="pin-label" id="pinLabel">Move map to pin</div>
                         </div>
                     </div>
 
                     <div class="detail-panel">
-                        <div class="location-card">
+                        <div class="location-card active" id="card-dropoff" onclick="selectMode('dropoff')">
                             <div class="loc-icon"><i class="fas fa-map-marker-alt"></i></div>
                             <div class="loc-info">
-                                <h3>HOME (DROP OFF)</h3>
-                                <p>AGILE Delima Residensi KL Bukit Bintang Suites TRX, 55188 Kuala Lumpur</p>
+                                <h3>Drop Off</h3>
+                                <p id="text-dropoff">AGILE Delima Residensi KL...</p>
                             </div>
                         </div>
-                        <div class="location-card">
+
+                        <div class="location-card" id="card-pickup" onclick="selectMode('pickup')">
                             <div class="loc-icon"><i class="fas fa-map-marker-alt"></i></div>
                             <div class="loc-info">
-                                <h3>OFFICE (PICK UP)</h3>
-                                <p>100, Jalan Tun Perak, Bukit Bintang, 50050 Kuala Lumpur</p>
+                                <h3>Pick Up</h3>
+                                <p id="text-pickup">100, Jalan Tun Perak...</p>
                             </div>
                         </div>
+
                         <button class="btn-confirm" onclick="window.location.href='trip-detail.html'">Confirm Location</button>
-                        <div class="chatbot-btn"><i class="fas fa-robot"></i></div>
                     </div>
 
                     <div class="bottom-nav">
@@ -109,7 +120,91 @@
     <script>
         var map = L.map('map', { zoomControl: false }).setView([3.1475, 101.6995], 16);
         L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', { attribution: '© OpenStreetMap' }).addTo(map);
-        setTimeout(function(){ map.invalidateSize(); }, 500);
+
+        let currentMode = 'dropoff'; // Default
+        const searchInput = document.getElementById('topSearchInput');
+
+        // Select Pickup or Dropoff mode
+        function selectMode(mode) {
+            currentMode = mode;
+            document.getElementById('card-dropoff').classList.toggle('active', mode === 'dropoff');
+            document.getElementById('card-pickup').classList.toggle('active', mode === 'pickup');
+            
+            searchInput.placeholder = mode === 'dropoff' ? "Search drop off..." : "Search pick up...";
+            
+            // Icon color logic (optional)
+            const iconHTML = mode === 'dropoff' ? '<i class="fas fa-map-marker-alt"></i>' : '<i class="fas fa-building"></i>';
+            document.getElementById('pinIcon').innerHTML = iconHTML;
+        }
+
+        // --- SEARCH FUNCTION ---
+        searchInput.addEventListener("keypress", function(e) { if (e.key === "Enter") triggerTopSearch(); });
+
+        function triggerTopSearch() {
+            const query = searchInput.value; if (!query) return;
+
+            fetch(`https://nominatim.openstreetmap.org/search?format=json&q=${query}&limit=1`)
+                .then(r => r.json()).then(data => {
+                    if (data.length > 0) {
+                        const result = data[0];
+                        // 1. Move Map
+                        map.flyTo([result.lat, result.lon], 16);
+                        
+                        // 2. Update Label & Save Data
+                        updateLocationData(result.display_name, result.lat, result.lon);
+                        
+                        searchInput.blur();
+                    } else { alert("Location not found!"); }
+                });
+        }
+
+        // --- REVERSE GEOCODING (When dragging map) ---
+        map.on('move', function() {
+            document.getElementById('pinLabel').innerText = "Locating...";
+        });
+
+        map.on('moveend', function() {
+            const center = map.getCenter();
+            
+            // Call API to get real name from coordinates
+            fetch(`https://nominatim.openstreetmap.org/reverse?format=json&lat=${center.lat}&lon=${center.lng}`)
+                .then(response => response.json())
+                .then(data => {
+                    if(data && data.display_name) {
+                        updateLocationData(data.display_name, center.lat, center.lng);
+                    } else {
+                        updateLocationData("Unknown Location", center.lat, center.lng);
+                    }
+                })
+                .catch(err => {
+                    // Fallback if API fails
+                    updateLocationData(`Lat: ${center.lat.toFixed(4)}, Lng: ${center.lng.toFixed(4)}`, center.lat, center.lng);
+                });
+        });
+
+        // Helper to update Text and LocalStorage
+        function updateLocationData(address, lat, lng) {
+            // Shorten address for UI
+            const shortAddress = address.split(',')[0] + ", " + (address.split(',')[1] || "");
+            
+            // Update Pin Label
+            document.getElementById('pinLabel').innerText = shortAddress;
+
+            // Update Active Card Text
+            const targetId = currentMode === 'dropoff' ? 'text-dropoff' : 'text-pickup';
+            document.getElementById(targetId).innerText = address; // Show full address in card
+
+            // SAVE TO LOCAL STORAGE FOR NEXT PAGE
+            if(currentMode === 'pickup') {
+                localStorage.setItem('shego_pickup_name', address);
+                localStorage.setItem('shego_pickup_lat', lat);
+                localStorage.setItem('shego_pickup_lng', lng);
+            } else {
+                localStorage.setItem('shego_dropoff_name', address);
+                localStorage.setItem('shego_dropoff_lat', lat);
+                localStorage.setItem('shego_dropoff_lng', lng);
+            }
+        }
     </script>
 </body>
 </html>

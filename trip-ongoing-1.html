@@ -1,0 +1,234 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Trip Ongoing</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
+    
+    <style>
+        /* FRAME CSS */
+        * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; }
+        body { background-color: #e0e0e0; display: flex; justify-content: center; align-items: center; min-height: 100vh; overflow: hidden; }
+        .mockup-wrapper { width: 100%; height: 100vh; display: flex; justify-content: center; align-items: center; }
+        .mockup-container { position: relative; width: 500px; height: 1020px; transform: scale(0.6); transform-origin: center center; background-image: url('mockup-iphone.png'); background-size: contain; background-repeat: no-repeat; background-position: center; }
+        .phone-screen { position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); width: 440px; height: 956px; border-radius: 55px; overflow: hidden; box-shadow: inset 0 0 20px rgba(0,0,0,0.2); }
+        .dynamic-island { position: absolute; top: 20px; left: 50%; transform: translateX(-50%); width: 126px; height: 37px; background-color: #000; border-radius: 20px; z-index: 9999; }
+
+        /* CONTENT CSS */
+        .screen-content { width: 100%; height: 100%; background-color: #fff; display: flex; flex-direction: column; }
+        
+        .header { padding: 20px; padding-top: 60px; display: flex; align-items: center; justify-content: center; position: relative; z-index: 10; }
+        .back-btn { position: absolute; left: 25px; font-size: 1.8rem; color: black; text-decoration: none; cursor: pointer; }
+        .page-title { font-size: 1.5rem; font-weight: 800; color: black; }
+
+        #map-container { height: 55%; width: 100%; position: relative; }
+        #map { width: 100%; height: 100%; z-index: 1; }
+        
+        /* Distance Overlay on Map */
+        .distance-badge {
+            position: absolute; top: 20px; right: 20px; z-index: 500;
+            background: rgba(0,0,0,0.7); color: white; padding: 8px 15px; border-radius: 20px; font-weight: bold;
+        }
+
+        .driver-overlay { position: absolute; bottom: 20px; left: 20px; display: flex; align-items: flex-end; z-index: 500; }
+        .driver-photo-box { width: 80px; height: 80px; border-radius: 10px; overflow: hidden; border: 2px solid white; box-shadow: 0 4px 10px rgba(0,0,0,0.3); margin-right: 10px; background: #ddd; }
+        .driver-photo-box img { width: 100%; height: 100%; object-fit: cover; }
+        .driver-info-badges { display: flex; flex-direction: column; gap: 5px; margin-bottom: 5px; }
+        .badge-name { background-color: #af094b; color: white; padding: 5px 10px; border-radius: 5px; font-weight: 800; font-size: 0.8rem; text-transform: uppercase; display: flex; align-items: center; }
+        .badge-name i { color: #FFD700; margin-left: 5px; }
+        .badge-car { background-color: #efc1da; color: #af094b; padding: 5px 10px; border-radius: 5px; font-weight: 800; font-size: 0.75rem; text-transform: uppercase; }
+
+        .status-section { padding: 15px; text-align: center; }
+        .status-title { font-weight: 700; font-size: 1rem; color: black; }
+        .status-active { font-weight: 700; font-size: 1rem; color: #00c853; }
+
+        .chatbot-btn { position: absolute; bottom: 120px; right: 25px; width: 60px; height: 60px; background: transparent; border-radius: 50%; display: flex; align-items: center; justify-content: center;  z-index: 1000; cursor: pointer; border: 1.5px solid transparent; }
+        
+        .safety-panel { background-color: #ffe6f2; flex-grow: 1; border-top-left-radius: 20px; border-top-right-radius: 20px; padding: 25px; display: flex; flex-direction: column; justify-content: center; }
+        .safety-label { font-weight: 800; font-size: 1.2rem; color: black; margin-bottom: 5px; }
+        .share-trip { font-weight: 600; font-size: 1rem; color: black; display: flex; align-items: center; margin-bottom: 25px; cursor: pointer; }
+        .btn-sos { width: 100%; background-color: #e62e2e; color: white; padding: 20px; border-radius: 10px; font-size: 1.3rem; font-weight: 900; border: none; cursor: pointer; }
+
+        /* MODALS */
+        .modal-overlay { position: absolute; bottom: 0; left: 0; width: 100%; height: 85%; background: white; border-top-left-radius: 25px; border-top-right-radius: 25px; box-shadow: 0 -5px 25px rgba(0,0,0,0.3); z-index: 2000; transform: translateY(110%); transition: transform 0.3s ease; display: flex; flex-direction: column; }
+        .modal-overlay.show { transform: translateY(0); }
+        
+        /* SOS Specific */
+        #sosModal { height: 60%; }
+        .sos-header { background: #e62e2e; color: white; padding: 20px; border-top-left-radius: 25px; border-top-right-radius: 25px; display: flex; justify-content: space-between; align-items: center; font-weight: bold; }
+        .sos-body { flex-grow: 1; padding: 30px; background: #fff0f0; display: flex; flex-direction: column; align-items: center; justify-content: center; }
+        .sos-big-btn { width: 100%; background-color: #e62e2e; color: white; padding: 25px; border-radius: 15px; font-size: 1.5rem; font-weight: 900; border: none; cursor: pointer; margin-bottom: 20px; display: flex; align-items: center; justify-content: center; gap: 15px; }
+
+        /* Chat Modal */
+        .chat-header { background: #af094b; color: white; padding: 20px; border-top-left-radius: 25px; border-top-right-radius: 25px; display: flex; justify-content: space-between; align-items: center; font-weight: bold; font-size: 1.1rem; }
+        .robot-showcase { display: flex; align-items: center; justify-content: center; padding: 20px; background: #fdf2f8; border-bottom: 1px solid #eee; gap: 15px; }
+        .robot-circle { width: 70px; height: 70px; background: transparent; border-radius: 50%; display: flex; align-items: center; justify-content: center; border: 3px solid #af094b; font-size: 2.5rem; color: #af094b; }
+        .robot-bubble { background: #00aaff; color: white; padding: 10px 15px; border-radius: 15px; border-bottom-left-radius: 0; font-size: 0.9rem; font-weight: 600; max-width: 180px; position: relative; }
+        .robot-bubble::after { content: ''; position: absolute; bottom: -8px; left: 0; border-width: 10px 10px 0; border-style: solid; border-color: #00aaff transparent; display: block; width: 0; }
+        .chat-body { flex-grow: 1; padding: 20px; background: white; overflow-y: auto; display: flex; flex-direction: column; gap: 10px; }
+        .chat-msg { padding: 12px 18px; border-radius: 15px; max-width: 80%; font-size: 0.95rem; }
+        .chat-msg.user { background: #ddd; color: black; border-bottom-right-radius: 0; align-self: flex-end; }
+        .chat-msg.agent { background: #efc1da; color: black; border-bottom-left-radius: 0; align-self: flex-start; }
+        .chat-input-area { padding: 20px; border-top: 1px solid #ddd; display: flex; flex-direction: column; gap: 10px; background: #fff; }
+        .input-row { display: flex; gap: 10px; }
+        .chat-input { flex-grow: 1; padding: 12px; border-radius: 20px; border: 1px solid #ccc; outline: none; background: #f5f5f5; }
+        .btn-send { background: #af094b; color: white; border: none; width: 45px; height: 45px; border-radius: 50%; cursor: pointer; display: flex; align-items: center; justify-content: center; }
+        .btn-live-agent { width: 100%; padding: 12px; border: 2px solid #af094b; border-radius: 50px; background: white; color: #af094b; font-weight: 700; cursor: pointer; display: flex; align-items: center; justify-content: center; gap: 8px; }
+   
+   </style>
+</head>
+<body>
+    <div class="mockup-wrapper">
+        <div class="mockup-container">
+            <div class="phone-screen">
+                <div class="dynamic-island"></div>
+                <div class="screen-content">
+                    
+                    <div class="header">
+                        <a href="confirm-driver-id-1.html" class="back-btn"><i class="fas fa-arrow-left"></i></a>
+                        <div class="page-title">Trip Ongoing</div>
+                    </div>
+
+                    <div id="map-container">
+                        <div id="map"></div>
+                        <div class="distance-badge" id="distBadge">Dist: Calculating...</div>
+                        
+                        <div class="driver-overlay">
+                            <div class="driver-photo-box"><img src="driver-photo-1.jpg" alt="Liu Mei Xuan"></div>
+                            <div class="driver-info-badges">
+                                <div class="badge-name">Nadhira Zafran | 25 YRS <i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i></div>
+                                <div class="badge-car">Perodua Myvi | VAG 7123</div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="status-section">
+                        <div class="status-title">Trip is monitored by PDRM</div>
+                        <div class="status-active">Status: Connected & Active</div>
+                    </div>
+
+                    <div class="chatbot-btn" onclick="openchat()"><img src="shego-assistant.png" style="width: 180px; background-color: transparent;"></div>
+
+                    <div class="safety-panel">
+                        <div class="safety-label">Safety Features</div>
+                        <div class="share-trip" onclick="alert('Link Copied!')">Share Trip Details <i class="far fa-paper-plane" style="margin-left:5px;"></i></div>
+                        <button class="btn-sos" onclick="openModal('sosModal')">EMERGENCY / SOS</button>
+                    </div>
+
+                    <div class="modal-overlay" id="homeChatModal">
+                        <div class="chat-header"><span>SheGO Assistant</span><i class="fas fa-times" style="cursor:pointer;" onclick="closechat()"></i></div>
+                        <div class="robot-showcase"><div class="robot-circle"><i class="fas fa-robot"></i></div><div class="robot-bubble">Hello! How may I help you?</div></div>
+                        <div class="chat-body" id="chatBody"></div>
+                        <div class="chat-input-area">
+                            <button class="btn-live-agent" onclick="connectHuman()"><i class="fas fa-headset"></i> Chat with Real Person</button>
+                            <div class="input-row"><input type="text" class="chat-input" placeholder="Type message..." id="userMessage"><button class="btn-send" onclick="sendMessage()"><i class="fas fa-paper-plane"></i></button></div>
+                        </div>
+                    </div>
+
+                    <div class="modal-overlay" id="sosModal">
+                        <div class="sos-header"><span>EMERGENCY ASSISTANCE</span><i class="fas fa-times" style="cursor:pointer;" onclick="closeModal('sosModal')"></i></div>
+                        <div class="sos-body">
+                            <div class="sos-desc" style="text-align:center; color:#555; margin-bottom:30px; font-size:1.1rem; line-height:1.4;">Pressing the button below will immediately connect you to Malaysian Emergency Services (999).</div>
+                            <button class="sos-big-btn" onclick="window.location.href='tel:999'"><i class="fas fa-phone-volume"></i> CALL 999</button>
+                            <button style="background:#ddd; color:black; border:none; padding:15px; width:100%; border-radius:10px; font-weight:bold; cursor:pointer;" onclick="closeModal('sosModal')">Cancel</button>
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+    <script>
+        // --- CALCULATION HELPERS ---
+        function getDistanceFromLatLonInKm(lat1, lon1, lat2, lon2) {
+            var R = 6371; 
+            var dLat = deg2rad(lat2-lat1);  
+            var dLon = deg2rad(lon2-lon1); 
+            var a = Math.sin(dLat/2) * Math.sin(dLat/2) + Math.cos(deg2rad(lat1)) * Math.cos(deg2rad(lat2)) * Math.sin(dLon/2) * Math.sin(dLon/2); 
+            var c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1-a)); 
+            return R * c;
+        }
+        function deg2rad(deg) { return deg * (Math.PI/180) }
+
+        // --- MAP SETUP ---
+        // 1. Retrieve Stored Coordinates
+        const pickupLat = parseFloat(localStorage.getItem('shego_pickup_lat')) || 3.1475;
+        const pickupLng = parseFloat(localStorage.getItem('shego_pickup_lng')) || 101.6995;
+        const dropoffLat = parseFloat(localStorage.getItem('shego_dropoff_lat')) || 3.1579;
+        const dropoffLng = parseFloat(localStorage.getItem('shego_dropoff_lng')) || 101.7116;
+
+        // 2. Initialize Map centered between points
+        var map = L.map('map', { zoomControl: false });
+        L.tileLayer('https://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}{r}.png', { attribution: '&copy; CARTO' }).addTo(map);
+
+        // 3. Create Points for Animation
+        // Create 5 intermediate points for smoother animation line
+        var routePoints = [
+            [pickupLat, pickupLng],
+            [pickupLat + (dropoffLat-pickupLat)*0.25, pickupLng + (dropoffLng-pickupLng)*0.25], 
+            [pickupLat + (dropoffLat-pickupLat)*0.5, pickupLng + (dropoffLng-pickupLng)*0.5], 
+            [pickupLat + (dropoffLat-pickupLat)*0.75, pickupLng + (dropoffLng-pickupLng)*0.75], 
+            [dropoffLat, dropoffLng]
+        ];
+
+        var polyline = L.polyline(routePoints, {color: '#2196F3', weight: 6}).addTo(map);
+        map.fitBounds(polyline.getBounds(), {padding: [50, 50]});
+
+        // 4. Update Distance Badge
+        const distKm = getDistanceFromLatLonInKm(pickupLat, pickupLng, dropoffLat, dropoffLng);
+        document.getElementById('distBadge').innerText = distKm.toFixed(1) + " KM Remaining";
+
+        // 5. Car Animation
+        var carIcon = L.divIcon({ html: '<i class="fas fa-car" style="color:white; font-size:22px; background:#2196F3; padding:8px; border-radius:50%; box-shadow:0 0 10px #2196F3;"></i>', className: 'custom-car-icon', iconSize: [40, 40], iconAnchor: [20, 20] });
+        var carMarker = L.marker(routePoints[0], {icon: carIcon}).addTo(map);
+
+        let step=0; 
+        const totalSteps = 300; // Slower animation
+        let currentSegment = 0;
+
+        function animateCar() {
+            if (currentSegment >= routePoints.length - 1) { 
+                setTimeout(() => { 
+                    window.location.href="arrived.html"; 
+                }, 1000); 
+                return; 
+            }
+            const start=routePoints[currentSegment]; const end=routePoints[currentSegment+1];
+            const lat=start[0]+(end[0]-start[0])*(step/(totalSteps/4)); 
+            const lng=start[1]+(end[1]-start[1])*(step/(totalSteps/4));
+            
+            carMarker.setLatLng([lat, lng]); 
+            
+            step++; 
+            if(step > (totalSteps/4)) { step=0; currentSegment++; }
+            requestAnimationFrame(animateCar);
+        }
+        
+        // Start animation after slight delay
+        setTimeout(animateCar, 1500);
+
+        // --- MODAL FUNCTIONS ---
+        function openModal(id) { document.getElementById(id).classList.add('show'); }
+        function closeModal(id) { document.getElementById(id).classList.remove('show'); }
+        function openchat() { document.getElementById('homeChatModal').classList.add('show'); }
+        function closechat() { document.getElementById('homeChatModal').classList.remove('show'); }
+        
+        function sendMessage() {
+            const input = document.getElementById('userMessage'); if(!input.value.trim()) return;
+            const body = document.getElementById('chatBody');
+            body.innerHTML += `<div class='chat-msg user'>${input.value}</div>`;
+            input.value = ''; body.scrollTop = body.scrollHeight;
+            setTimeout(() => { body.innerHTML += `<div class='chat-msg agent'>I can help you!</div>`; body.scrollTop = body.scrollHeight; }, 1000);
+        }
+        function connectHuman() {
+            const body = document.getElementById('chatBody');
+            body.innerHTML += `<div style='text-align:center; color:#888; font-size:0.8rem;'>Connecting...</div>`;
+            setTimeout(() => { body.innerHTML += `<div class='chat-msg agent' style='border:2px solid #af094b'>Hi! Sarah here.</div>`; body.scrollTop = body.scrollHeight; }, 2000);
+        }
+   </script>
+</body>
+</html>

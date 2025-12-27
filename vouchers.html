@@ -1,0 +1,98 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Select Voucher</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    
+    <style>
+        /* Reusing consistent styles */
+        * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; }
+        body { background-color: #e0e0e0; display: flex; justify-content: center; align-items: center; min-height: 100vh; overflow: hidden; }
+        .mockup-wrapper { width: 100%; height: 100vh; display: flex; justify-content: center; align-items: center; }
+        .mockup-container { position: relative; width: 500px; height: 1020px; transform: scale(0.6); background-image: url('mockup-iphone.png'); background-size: contain; background-repeat: no-repeat; background-position: center; }
+        .phone-screen { position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); width: 440px; height: 956px; border-radius: 55px; overflow: hidden; background: #f8f8f8; display: flex; flex-direction: column; }
+        .dynamic-island { position: absolute; top: 20px; left: 50%; transform: translateX(-50%); width: 126px; height: 37px; background-color: #000; border-radius: 20px; z-index: 9999; }
+
+        .header { background-color: #af094b; padding: 20px; padding-top: 60px; display: flex; align-items: center; color: white; }
+        .back-btn { font-size: 1.8rem; color: white; text-decoration: none; cursor: pointer; margin-right: 20px; margin-left: 10px; }
+        .page-title { font-size: 1.4rem; font-weight: 800; }
+
+        .voucher-list { padding: 20px; overflow-y: auto; flex-grow: 1; }
+        
+        .voucher-card {
+            background: white; border-radius: 15px; padding: 20px; margin-bottom: 15px;
+            display: flex; align-items: center; box-shadow: 0 2px 8px rgba(0,0,0,0.05);
+            cursor: pointer; border-left: 5px solid #ccc; transition: transform 0.1s;
+        }
+        .voucher-card.active { border-left: 5px solid #af094b; background: #fff5fa; }
+        
+        .voucher-icon { width: 50px; height: 50px; background: #af094b; color: white; border-radius: 50%; display: flex; align-items: center; justify-content: center; margin-right: 15px; font-size: 1.2rem; }
+        .voucher-info h4 { font-size: 1rem; font-weight: 800; margin-bottom: 5px; color: #333; }
+        .voucher-info p { font-size: 0.8rem; color: #666; }
+        
+        .apply-btn {
+            background: #af094b; color: white; border: none; padding: 8px 15px;
+            border-radius: 20px; font-weight: bold; font-size: 0.8rem; margin-left: auto;
+        }
+
+    </style>
+</head>
+<body>
+    <div class="mockup-wrapper">
+        <div class="mockup-container">
+            <div class="phone-screen">
+                <div class="dynamic-island"></div>
+                
+                <div class="header">
+                    <a href="arrived.html" class="back-btn"><i class="fas fa-arrow-left"></i></a>
+                    <div class="page-title">Select Voucher</div>
+                </div>
+
+                <div class="voucher-list">
+                    
+                    <div class="voucher-card" onclick="applyVoucher('New User Promo', 5.00)">
+                        <div class="voucher-icon"><i class="fas fa-gift"></i></div>
+                        <div class="voucher-info">
+                            <h4>RM 5.00 OFF</h4>
+                            <p>New user welcome gift</p>
+                        </div>
+                        <button class="apply-btn">Apply</button>
+                    </div>
+
+                    <div class="voucher-card" onclick="applyVoucher('Weekend Special', 3.00)">
+                        <div class="voucher-icon"><i class="fas fa-star"></i></div>
+                        <div class="voucher-info">
+                            <h4>RM 3.00 OFF</h4>
+                            <p>Valid for weekend trips only</p>
+                        </div>
+                        <button class="apply-btn">Apply</button>
+                    </div>
+
+                    <div class="voucher-card" onclick="applyVoucher('Loyalty Reward', 2.00)">
+                        <div class="voucher-icon"><i class="fas fa-award"></i></div>
+                        <div class="voucher-info">
+                            <h4>RM 2.00 OFF</h4>
+                            <p>For your 5th ride</p>
+                        </div>
+                        <button class="apply-btn">Apply</button>
+                    </div>
+
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        function applyVoucher(name, amount) {
+            // Save discount data
+            localStorage.setItem('shego_voucher_name', name);
+            localStorage.setItem('shego_voucher_amount', amount);
+            
+            // Redirect back
+            window.location.href = 'arrived.html';
+        }
+    </script>
+</body>
+</html>

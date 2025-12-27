@@ -1,0 +1,207 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SheGO - Select Destination</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    
+    <style>
+       /* FRAME CSS */
+        * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; }
+        body { background-color: #e0e0e0; display: flex; justify-content: center; align-items: center; min-height: 100vh; overflow: hidden; }
+        .mockup-wrapper { width: 100%; height: 100vh; display: flex; justify-content: center; align-items: center; }
+        .mockup-container { position: relative; width: 500px; height: 1020px; transform: scale(0.6); transform-origin: center center; background-image: url('mockup-iphone.png'); background-size: contain; background-repeat: no-repeat; background-position: center; }
+        .phone-screen { position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); width: 440px; height: 956px; border-radius: 55px; overflow: hidden; box-shadow: inset 0 0 20px rgba(0,0,0,0.2); background: white; }
+        .dynamic-island { position: absolute; top: 20px; left: 50%; transform: translateX(-50%); width: 126px; height: 37px; background-color: #000; border-radius: 20px; z-index: 9999; }
+
+        /* HEADER */
+        .header { padding: 70px 20px 15px 20px; border-bottom: 1px solid #eee; display: flex; align-items: flex-start; gap: 15px;}
+        .back-btn { font-size: 1.3rem; color: #333; cursor: pointer; padding-top: 12px;}
+        
+        .inputs-container { flex-grow: 1; display: flex; flex-direction: column; gap: 10px; position: relative; }
+        
+        /* Connector dots between inputs */
+        .inputs-container::before {
+            content: ''; position: absolute; left: 21px; top: 35px; bottom: 35px;
+            width: 2px; border-left: 2px dotted #ccc; z-index: 1;
+        }
+
+        .field-wrapper { 
+            display: flex; align-items: center; gap: 12px; 
+            padding: 12px 15px; border-radius: 12px; 
+            background: #f6f6f6; border: 2px solid transparent;
+            transition: 0.2s; z-index: 2;
+        }
+        /* Style for when a box is active/focused */
+        .field-wrapper.focused { border-color: #00a859; background: white; box-shadow: 0 4px 12px rgba(0,0,0,0.05); }
+        .field-wrapper input { border: none; background: transparent; width: 100%; outline: none; font-size: 1.05rem; color: #333; }
+
+        /* ICONS */
+        .icon-pickup { color: #1e90ff; font-size: 1rem; }
+        .icon-dest { color: #ff4757; font-size: 1rem; }
+        .icon-right { color: #999; font-size: 1.1rem; cursor: pointer; }
+
+        /* TABS */
+        .tabs-bar { display: flex; gap: 10px; padding: 15px 20px; }
+        .tab { 
+            padding: 8px 22px; border-radius: 20px; border: none; 
+            background: #f0f0f0; color: #666; font-weight: 700; cursor: pointer; 
+            font-size: 0.95rem;
+        }
+        .tab.active { background: #e7f5ed; color: #008148; }
+
+        /* LIST AREA */
+        .list-container { flex-grow: 1; overflow-y: auto; padding: 0 20px 100px 20px; height: 600px;}
+        .list-item { 
+            display: flex; align-items: center; gap: 15px; 
+            padding: 18px 0; border-bottom: 1px solid #f2f2f2; cursor: pointer;
+        }
+        .circle-icon { 
+            width: 42px; height: 42px; border-radius: 50%; 
+            background: #f0f0f0; display: flex; align-items: center; 
+            justify-content: center; color: #444; flex-shrink: 0;
+        }
+        .item-text { flex-grow: 1; }
+        .item-text h4 { font-size: 1.05rem; color: #222; margin-bottom: 4px; }
+        .item-text p { font-size: 0.85rem; color: #888; line-height: 1.3; }
+        .more-btn { color: #ccc; padding: 5px; }
+
+        /* GRABMAPS BUTTON */
+        .grabmaps-btn { 
+            position: absolute; bottom: 35px; left: 50%; transform: translateX(-50%);
+            background: white; border: 1px solid #eee; padding: 14px 28px;
+            border-radius: 35px; display: flex; align-items: center; gap: 10px;
+            font-weight: 700; box-shadow: 0 8px 20px rgba(0,0,0,0.08); cursor: pointer;
+            z-index: 10; white-space: nowrap;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="mockup-wrapper">
+        <div class="mockup-container">
+            <div class="phone-screen">
+                <div class="dynamic-island"></div>
+                <div class="screen-content">
+            
+            <div class="header">
+                <div class="back-btn"><i class="fas fa-arrow-left"></i></div>
+                <div class="inputs-container">
+                    <div class="field-wrapper" id="pickupWrap">
+                        <i class="fas fa-dot-circle icon-pickup"></i>
+                        <input type="text" id="pickupInput" placeholder="Current location" 
+                               oninput="handleGlobalSearch(this.value)" 
+                               onfocus="focusField('pickupWrap')" 
+                               onblur="blurField('pickupWrap')">
+                        <i class="fas fa-globe icon-right"></i>
+                    </div>
+                    <div class="field-wrapper focused" id="destWrap">
+                        <i class="fas fa-map-marker-alt icon-dest"></i>
+                        <input type="text" id="destInput" placeholder="Find airports by flight no." 
+                               oninput="handleGlobalSearch(this.value)" 
+                               onfocus="focusField('destWrap')" 
+                               onblur="blurField('destWrap')" autofocus>
+                    </div>
+                </div>
+            </div>
+
+            <div class="tabs-bar">
+                <button class="tab active" id="tab-recent" onclick="changeTab('recent')">Recent</button>
+                <button class="tab" id="tab-suggested" onclick="changeTab('suggested')">Suggested</button>
+                <button class="tab" id="tab-saved" onclick="changeTab('saved')">Saved</button>
+            </div>
+
+            <div class="list-container" id="mainList">
+            </div>
+
+            <div class="grabmaps-btn">
+                <i class="fas fa-map" style="color: #00a859; font-size: 1.2rem;"></i> Choose on GrabMaps
+            </div>
+
+        </div>
+    </div>
+
+    <script>
+        // DATA
+        const data = {
+            recent: [
+                { title: "Kolej Casuarina - Block C1", desc: "5.64km • Block C1, Jalan Casuarina, UiTM Puncak Alam" },
+                { title: "35, Jala Hillpark 11/8", desc: "7.01km • Pusat Perdagangan Hillpark, Puncak Alam" },
+                { title: "Lot 2305-B, Jalan Dusun", desc: "0.10km • Kampung Bukit Kapar, Klang, Selangor" }
+            ],
+            suggested: [
+                { title: "Subang Airport (SZB)", desc: "12.4km • Lapangan Terbang Sultan Abdul Aziz Shah" },
+                { title: "Subang Parade", desc: "15.1km • Jalan Kemajuan Subang, SS16" },
+                { title: "KLIA Terminal 1", desc: "48.0km • Sepang, Selangor" },
+                { title: "Jalan Iskandar", desc: "Kapar, Klang, Selangor" },
+                { title: "Shah Alam City Centre", desc: "Seksyen 14, Shah Alam" }
+            ],
+            saved: [
+                { title: "Home", desc: "Jalan Iskandar, Kapar, Klang" },
+                { title: "Office", desc: "Menara SheGO, Kuala Lumpur" }
+            ]
+        };
+
+        let activeFieldId = 'destInput'; // Track which input is being filled
+
+        // UI FUNCTIONS
+        function focusField(id) {
+            document.querySelectorAll('.field-wrapper').forEach(el => el.classList.remove('focused'));
+            const wrapper = document.getElementById(id);
+            wrapper.classList.add('focused');
+            activeFieldId = wrapper.querySelector('input').id;
+        }
+
+        function blurField(id) {
+            // Visual logic for blur if needed
+        }
+
+        function renderList(items, type) {
+            const container = document.getElementById('mainList');
+            const iconClass = type === 'recent' ? 'far fa-clock' : (type === 'saved' ? 'fas fa-heart' : 'fas fa-map-marker-alt');
+            
+            container.innerHTML = items.map(item => `
+                <div class="list-item" onclick="selectLocation('${item.title}')">
+                    <div class="circle-icon"><i class="${iconClass}"></i></div>
+                    <div class="item-text">
+                        <h4>${item.title}</h4>
+                        <p>${item.desc}</p>
+                    </div>
+                    <i class="fas fa-ellipsis-v more-btn"></i>
+                </div>
+            `).join('');
+        }
+
+        function changeTab(tabName) {
+            document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
+            document.getElementById(`tab-${tabName}`).classList.add('active');
+            renderList(data[tabName], tabName);
+        }
+
+        // Global search: if either input has text, show suggested list
+        function handleGlobalSearch(query) {
+            if (query.length > 0) {
+                const filtered = data.suggested.filter(i => 
+                    i.title.toLowerCase().includes(query.toLowerCase())
+                );
+                
+                renderList(filtered.length > 0 ? filtered : [{title: `Search for "${query}"`, desc: "Find locations near you"}], 'suggested');
+                
+                // Switch visual tab to suggested
+                document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
+                document.getElementById('tab-suggested').classList.add('active');
+            } else {
+                changeTab('recent');
+            }
+        }
+
+        function selectLocation(name) {
+            document.getElementById(activeFieldId).value = name;
+        }
+
+        // Initialize with Recent
+        renderList(data.recent, 'recent');
+    </script>
+</body>
+</html>

@@ -7,7 +7,7 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     
     <style>
-        /* --- STYLE FRAME IPHONE (SAMA UNTUK SEMUA PAGE) --- */
+        /* --- STYLE FRAME IPHONE --- */
         * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; }
         body { background-color: #e0e0e0; display: flex; justify-content: center; align-items: center; min-height: 100vh; overflow: hidden; }
 
@@ -34,7 +34,6 @@
 
         .top-section { flex: 1; display: flex; flex-direction: column; align-items: center; justify-content: center; padding: 40px 20px; text-align: center; }
         .logo { width: 200px; margin-bottom: 20px; object-fit: contain; }
-        .tagline { color: #af094b; font-weight: bold; font-style: italic; font-size: 1.2rem; margin-bottom: 20px; }
         .promo-text { color: #af094b; font-weight: 500; font-size: 1rem; line-height: 1.4; max-width: 320px; }
 
         .bottom-sheet {
@@ -43,11 +42,36 @@
         }
         .bottom-sheet h2 { color: white; text-align: center; margin-bottom: 25px; font-size: 1.5rem; font-weight: 800; }
 
-        .phone-input-group { display: flex; background: white; border-radius: 12px; overflow: hidden; margin-bottom: 25px; height: 55px; }
-        .select-wrapper { position: relative; display: flex; align-items: center; background: #f8f8f8; border-right: 1px solid #ddd; }
+        /* MODIFIED INPUT GROUP FOR NEXT BUTTON */
+        .phone-input-group { display: flex; background: white; border-radius: 12px; overflow: hidden; margin-bottom: 25px; height: 55px; align-items: center; }
+        
+        .select-wrapper { position: relative; display: flex; align-items: center; background: #f8f8f8; border-right: 1px solid #ddd; height: 100%; }
         .select-wrapper::after { content: '▼'; font-size: 0.6rem; position: absolute; right: 8px; pointer-events: none; color: #333; }
-        .country-code { border: none; background: transparent; padding: 0 25px 0 15px; font-size: 1.1rem; outline: none; appearance: none; font-weight: 600; }
+        .country-code { border: none; background: transparent; padding: 0 25px 0 15px; font-size: 1.1rem; outline: none; appearance: none; font-weight: 600; height: 100%; }
+        
         .phone-number { border: none; padding: 10px 15px; font-size: 1.1rem; flex-grow: 1; outline: none; font-weight: 600; }
+
+        /* NEW NEXT BUTTON STYLES */
+        .btn-next {
+            background-color: #ccc; /* Default Disabled Color */
+            color: white;
+            border: none;
+            width: 60px;
+            height: 100%;
+            cursor: not-allowed;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.2rem;
+            transition: background-color 0.3s ease;
+        }
+        .btn-next.active {
+            background-color: #111; /* Or Dark Pink if preferred */
+            cursor: pointer;
+        }
+        .btn-next.active:hover {
+            background-color: #000;
+        }
 
         .divider { display: flex; align-items: center; color: white; margin-bottom: 25px; font-weight: bold; }
         .divider::before, .divider::after { content: ""; flex: 1; border-bottom: 1px solid rgba(255, 255, 255, 0.5); }
@@ -68,7 +92,8 @@
     <div class="mockup-wrapper">
         <div class="mockup-container">
             <div class="phone-screen">
-                <div class="dynamic-island"></div> <div class="screen-content">
+                <div class="dynamic-island"></div> 
+                <div class="screen-content">
                     <div class="top-section">
                         <img src="shelogo-login.png" alt="SheGO Logo" class="logo">
                         <p class="promo-text">New to SheGO? Enjoy 50% off on your first ride-hailing trips!</p>
@@ -76,45 +101,45 @@
 
                     <div class="bottom-sheet">
                         <h2>Enter Your Number</h2>
+                        
                         <div class="phone-input-group">
                             <div class="select-wrapper">
                                 <select class="country-code">
                                     <option value="+60">🇲🇾 +60</option>
                                     <option value="+65">🇸🇬 +65</option>
                                     <option value="+62">🇮🇩 +62</option>
-                                     <option value="+66">🇹🇭 +66</option>
-                                     <option value="+63">🇵🇭 +63</option>
-                                     <option value="+84">🇻🇳 +84</option>
+                                    <option value="+66">🇹🇭 +66</option>
+                                    <option value="+63">🇵🇭 +63</option>
+                                    <option value="+84">🇻🇳 +84</option>
                                     <option value="+91">🇮🇳 +91</option>
                                     <option value="+1">🇺🇸 +1</option>
                                     <option value="+44">🇬🇧 +44</option>
-                                    <option value="+81">🇯🇵 +81</option>
-                                    <option value="+49">🇩🇪 +49</option>
-                                    <option value="+33">🇫🇷 +33</option>
-                                    <option value="+39">🇮🇹 +39</option>
-                                    <option value="+7">🇷🇺 +7</option>
-
                                 </select>
                             </div>
-                            <input type="tel" class="phone-number" placeholder="Phone Number">
+                            <input type="tel" class="phone-number" id="phoneInput" placeholder="Phone Number">
+                            
+                            <button class="btn-next" id="nextBtn" onclick="goToNextPage()" disabled>
+                                <i class="fas fa-arrow-right"></i>
+                            </button>
                         </div>
 
                         <div class="divider"><span>OR</span></div>
 
-                        <button class="social-btn" onclick="window.location.href='login-email.html'">
-                            <i class="fab fa-apple"></i> Login with Apple
-                        </button>
-                        <button class="social-btn" onclick="window.location.href='login-email.html'">
-                            <i class="fab fa-google"></i> Login with Google
-                        </button>
-                        <button class="social-btn" onclick="window.location.href='login-email.html'">
-                            <i class="fab fa-facebook"></i> Login with Facebook
-                        </button>
+                        <a href="login-apple.html" style="text-decoration: none;">
+                            <button class="social-btn"><i class="fab fa-apple"></i> Login with Apple</button>
+                        </a>
+
+                        <a href="login-google.html" style="text-decoration: none;">
+                            <button class="social-btn"><i class="fab fa-google"></i> Login with Google</button>
+                        </a>
+
+                        <a href="login-facebook.html" style="text-decoration: none;">
+                            <button class="social-btn"><i class="fab fa-facebook"></i> Login with Facebook</button>
+                        </a>
 
                         <div class="footer">
                             Don't have an account? <a href="signup.html">SIGN UP</a>
                         </div>
-
                         <div class="footer">
                             Forgot Password? <a href="forgot-password.html">RESET</a>
                         </div>
@@ -123,5 +148,31 @@
             </div>
         </div>
     </div>
+
+    <script>
+        const phoneInput = document.getElementById('phoneInput');
+        const nextBtn = document.getElementById('nextBtn');
+
+        // Listen for typing
+        phoneInput.addEventListener('input', function() {
+            // If input has value, enable button and make it active
+            if(this.value.trim().length > 0) {
+                nextBtn.classList.add('active');
+                nextBtn.disabled = false;
+            } else {
+                nextBtn.classList.remove('active');
+                nextBtn.disabled = true;
+            }
+        });
+
+        // Function to handle click
+        function goToNextPage() {
+            // Only redirect if not disabled
+            if(!nextBtn.disabled) {
+                // Redirect to the location selection page
+                window.location.href = 'location-select.html';
+            }
+        }
+    </script>
 </body>
 </html>

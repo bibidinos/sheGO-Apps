@@ -32,6 +32,12 @@
         #map-container { height: 45%; width: 100%; position: relative; }
         #map { width: 100%; height: 100%; background: #ddd; }
 
+        .center-pin-container { position: absolute; top: 50%; left: 50%; transform: translate(-50%, -100%); z-index: 900; pointer-events: none; display: flex; flex-direction: column; align-items: center; }
+        .pin-icon { font-size: 3.5rem; color: #af094b; filter: drop-shadow(0 4px 6px rgba(0,0,0,0.4)); margin-bottom: -5px; }
+        .pin-shadow { width: 15px; height: 5px; background: rgba(0,0,0,0.3); border-radius: 50%; }
+
+        .back-btn { position: absolute; top: 60px; left: 25px; font-size: 1.5rem; color: black; background: white; width: 45px; height: 45px; border-radius: 50%; display: flex; align-items: center; justify-content: center; text-decoration: none; box-shadow: 0 4px 10px rgba(0,0,0,0.15); z-index: 1000; }
+
         .search-container { position: absolute; bottom: -25px; left: 50%; transform: translateX(-50%); width: 85%; z-index: 1000; }
         .search-pill { background-color: #af094b; border-radius: 50px; padding: 20px 25px; display: flex; align-items: center; box-shadow: 0 4px 15px rgba(0,0,0,0.2); cursor: pointer; }
         .search-pill i { color: white; font-size: 1.4rem; margin-right: 15px; }
@@ -42,7 +48,13 @@
         .section-title { font-size: 1.3rem; font-weight: 800; color: black; text-align: center; margin-bottom: 25px; }
 
         .quick-actions { display: flex; justify-content: space-between; margin-bottom: 30px; }
-        .action-btn { display: flex; align-items: center; justify-content: center; border: 2px solid #af094b; border-radius: 50px; padding: 12px 15px; background: white; cursor: pointer; width: 30%; }
+        .action-btn { 
+            display: flex; align-items: center; justify-content: center; 
+            border: 2px solid #af094b; border-radius: 50px; padding: 12px 15px; 
+            background: white; cursor: pointer; width: 30%; 
+            text-decoration: none; /* REMOVES UNDERLINE */
+            color: inherit; /* PREVENTS BLUE COLOR */
+        }        
         .action-btn i { color: #af094b; font-size: 1.2rem; margin-right: 8px; }
         .action-btn span { font-weight: 700; font-size: 1rem; color: #888; }
         .action-btn.new-btn span { color: #af094b; }
@@ -54,24 +66,25 @@
         .recent-name { font-weight: 700; font-size: 1rem; color: black; }
         .recent-sub { font-size: 0.85rem; color: #aaa; }
 
-        .chatbot-btn { position: absolute; bottom: 120px; right: 25px; font-size: 2.2rem; color: #af094b; cursor: pointer; z-index: 100; background: white; border-radius: 50%; width: 60px; height: 60px; display: flex; align-items: center; justify-content: center; box-shadow: 0 2px 10px rgba(0,0,0,0.2); }
+        /* Floating Chatbot */
+        .chatbot-btn { position: absolute; bottom: 120px; right: 25px; width: 60px; height: 60px; background: transparent; border-radius: 50%; display: flex; align-items: center; justify-content: center;  z-index: 1000; cursor: pointer; border: 1.5px solid transparent; }
+        .chatbot-btn i { font-size: 2rem; color: #af094b; }
 
         /* --- BOTTOM NAV (UPDATED) --- */
         .bottom-nav { position: absolute; bottom: 0; width: 100%; background: #fcebf4; display: flex; justify-content: space-around; padding: 15px 0; border-top-left-radius: 25px; border-top-right-radius: 25px; box-shadow: 0 -2px 10px rgba(0,0,0,0.1); z-index: 2000; }
         .nav-item { display: flex; flex-direction: column; align-items: center; text-decoration: none; color: #888; font-size: 0.8rem; font-weight: 600; position: relative; width: 20%; }
         .nav-item i { font-size: 1.5rem; margin-bottom: 5px; }
-        
         .nav-item.active { color: #af094b; }
         .nav-item.wallet-item { color: #af094b; margin-top: -35px; }
         .wallet-circle { background: #af094b; width: 60px; height: 60px; border-radius: 50%; display: flex; align-items: center; justify-content: center; color: white; border: 5px solid white; margin-bottom: 5px; }
         .badge { position: absolute; top: -5px; right: 15px; background: #af094b; color: white; font-size: 0.7rem; padding: 3px 6px; border-radius: 10px; border: 2px solid white; }
 
-        /* --- MODAL CSS --- */
-        .modal-overlay { position: absolute; bottom: 0; left: 0; width: 100%; height: 85%; background: white; border-top-left-radius: 25px; border-top-right-radius: 25px; box-shadow: 0 -5px 25px rgba(0,0,0,0.3); z-index: 3000; transform: translateY(110%); transition: transform 0.3s ease; display: flex; flex-direction: column; }
+         /* Modal Chat */
+        .modal-overlay { position: absolute; bottom: 0; left: 0; width: 100%; height: 85%; background: white; border-top-left-radius: 30px; border-top-right-radius: 30px; z-index: 3000; transform: translateY(110%); transition: transform 0.3s ease; display: flex; flex-direction: column; box-shadow: 0 -10px 30px rgba(0,0,0,0.2); }
         .modal-overlay.show { transform: translateY(0); }
         .chat-header { background: #af094b; color: white; padding: 20px; border-top-left-radius: 25px; border-top-right-radius: 25px; display: flex; justify-content: space-between; align-items: center; font-weight: bold; font-size: 1.1rem; }
         .robot-showcase { display: flex; align-items: center; justify-content: center; padding: 20px; background: #fdf2f8; border-bottom: 1px solid #eee; gap: 15px; }
-        .robot-circle { width: 70px; height: 70px; background: white; border-radius: 50%; display: flex; align-items: center; justify-content: center; border: 3px solid #af094b; font-size: 2.5rem; color: #af094b; }
+        .robot-circle { width: 70px; height: 70px; background: transparent; border-radius: 50%; display: flex; align-items: center; justify-content: center; border: 3px solid #af094b; font-size: 2.5rem; color: #af094b; }
         .robot-bubble { background: #00aaff; color: white; padding: 10px 15px; border-radius: 15px; border-bottom-left-radius: 0; font-size: 0.9rem; font-weight: 600; max-width: 180px; position: relative; }
         .robot-bubble::after { content: ''; position: absolute; bottom: -8px; left: 0; border-width: 10px 10px 0; border-style: solid; border-color: #00aaff transparent; display: block; width: 0; }
         .chat-body { flex-grow: 1; padding: 20px; background: white; overflow-y: auto; display: flex; flex-direction: column; gap: 10px; }
@@ -83,6 +96,10 @@
         .chat-input { flex-grow: 1; padding: 12px; border-radius: 20px; border: 1px solid #ccc; outline: none; background: #f5f5f5; }
         .btn-send { background: #af094b; color: white; border: none; width: 45px; height: 45px; border-radius: 50%; cursor: pointer; display: flex; align-items: center; justify-content: center; }
         .btn-live-agent { width: 100%; padding: 12px; border: 2px solid #af094b; border-radius: 50px; background: white; color: #af094b; font-weight: 700; cursor: pointer; display: flex; align-items: center; justify-content: center; gap: 8px; }
+      
+        .btn-pinned { width: 100%; padding: 20px; border-radius: 50px; border: none; background-color: #efc1da; font-size: 1.2rem; font-weight: 800; color: black; cursor: pointer; margin-top: 15px; }
+        .btn-pinned:hover { opacity: 0.9; }
+
     </style>
 </head>
 <body>
@@ -94,21 +111,39 @@
                 <div class="screen-content">
                     <div id="map-container">
                         <div id="map"></div>
+                         <a href="location-select.html" class="back-btn"><i class="fas fa-arrow-left"></i></a>
+
+                         <div class="center-pin-container">
+                            <i class="fas fa-map-marker-alt pin-icon"></i>
+                            <div class="pin-shadow"></div>
+                        </div>
+
                         <div class="search-container">
                             <div class="search-pill">
-                                <i class="fas fa-search" onclick="searchLocation()"></i>
-                                <input type="text" id="homeSearch" class="search-input" placeholder="Search Location">
-                            </div>
+                            <i class="fas fa-search" onclick="triggerSearch()"></i>
+                            <input type="text" id="searchInput" class="search-input" placeholder="Search location (e.g. Pavilion)...">
+                        </div>
+                            
                         </div>
                     </div>
 
                     <div class="content-area">
                         <h2 class="section-title">My Address</h2>
+
                         <div class="quick-actions">
-                            <div class="action-btn"><i class="fas fa-home"></i><span>Home</span></div>
-                            <div class="action-btn"><i class="fas fa-briefcase"></i><span>Office</span></div>
-                            <div class="action-btn new-btn"><i class="fas fa-plus"></i><span>New</span></div>
-                        </div>
+                        <a href="set-address.html?type=home" class="action-btn">
+                            <i class="fas fa-home"></i><span>Home</span>
+                        </a>
+                        
+                        <a href="set-address.html?type=office" class="action-btn">
+                            <i class="fas fa-briefcase"></i><span>Office</span>
+                        </a>
+                        
+                        <a href="add-place.html" class="action-btn new-btn">
+                            <i class="fas fa-plus"></i><span>New</span>
+                        </a>
+                     </div>
+
                         <div class="recent-section">
                             <h3>Recent</h3>
                             <div class="recent-item">
@@ -122,7 +157,8 @@
                         </div>
                     </div>
 
-                    <div class="chatbot-btn" onclick="openChat()"><i class="fas fa-comment-dots"></i></div>
+                    <div class="chatbot-btn" onclick="openchat()"><img src="shego-assistant.png" style="width: 180px; background-color: transparent;">
+                    </div>
 
                     <div class="bottom-nav">
                         <a href="home.html" class="nav-item active"><i class="fas fa-home"></i>Home</a>
@@ -133,13 +169,13 @@
                     </div>
 
                     <div class="modal-overlay" id="homeChatModal">
-                        <div class="chat-header"><span>SheGO Assistant</span><i class="fas fa-times" style="cursor:pointer;" onclick="closeChat()"></i></div>
+                        <div class="chat-header"><span>SheGO Assistant</span><i class="fas fa-times" style="cursor:pointer;" onclick="closechat()"></i></div>
                         <div class="robot-showcase"><div class="robot-circle"><i class="fas fa-robot"></i></div><div class="robot-bubble">Hello! How may I help you?</div></div>
                         <div class="chat-body" id="chatBody"></div>
                         <div class="chat-input-area">
                             <button class="btn-live-agent" onclick="connectHuman()"><i class="fas fa-headset"></i> Chat with Real Person</button>
                             <div class="input-row"><input type="text" class="chat-input" placeholder="Type message..." id="userMessage"><button class="btn-send" onclick="sendMessage()"><i class="fas fa-paper-plane"></i></button></div>
-                        </div>
+        
                     </div>
                 </div>
             </div>
@@ -148,11 +184,35 @@
 
     <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
     <script>
-        var map = L.map('map', { zoomControl: false }).setView([3.1478, 101.713], 15);
-        L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', { attribution: '&copy; OpenStreetMap' }).addTo(map);
+         var map = L.map('map', { zoomControl: false }).setView([3.1478, 101.713], 15);
+        L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', { attribution: '© OpenStreetMap' }).addTo(map);
+        setTimeout(function(){ map.invalidateSize(); }, 500);
 
-        function openChat() { document.getElementById('homeChatModal').classList.add('show'); }
-        function closeChat() { document.getElementById('homeChatModal').classList.remove('show'); }
+        let selectedType = null;
+        let currentSearchName = "Unknown Location";
+        const searchInput = document.getElementById('searchInput');
+        searchInput.addEventListener("keypress", function(e) { if (e.key === "Enter") triggerSearch(); });
+
+        function triggerSearch() {
+            const query = searchInput.value; if (!query) return;
+            fetch(`https://nominatim.openstreetmap.org/search?format=json&q=${query}&limit=1`)
+                .then(r => r.json()).then(data => {
+                    if (data.length > 0) {
+                        currentSearchName = data[0].display_name.split(',')[0];
+                        map.flyTo([data[0].lat, data[0].lon], 16);
+                        searchInput.blur(); 
+                    } else { alert("Location not found!"); }
+                });
+        }
+
+        function selectType(type, element) {
+            document.querySelectorAll('.address-item').forEach(item => item.classList.remove('selected'));
+            element.classList.add('selected');
+            selectedType = type;
+        }
+        
+        function openchat() { document.getElementById('homeChatModal').classList.add('show'); }
+        function closechat() { document.getElementById('homeChatModal').classList.remove('show'); }
         function sendMessage() {
             const input = document.getElementById('userMessage'); if(!input.value.trim()) return;
             const body = document.getElementById('chatBody');
