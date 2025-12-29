@@ -44,16 +44,43 @@
         .search-input { background: transparent; border: none; color: white; font-size: 1.1rem; font-weight: 600; width: 100%; outline: none; }
         .search-input::placeholder { color: rgba(255,255,255,0.8); }
 
-        .content-area { flex-grow: 1; padding: 50px 25px 120px 25px; overflow-y: auto; background: white; }
-        .section-title { font-size: 1.3rem; font-weight: 800; color: black; text-align: center; margin-bottom: 25px; }
+        .content-area { flex-grow: 1; padding: 40px 25px 120px 25px; overflow-y: auto; background: white; }
+        .section-title { font-size: 1.3rem; font-weight: 800; color: black; margin-bottom: 20px; margin-top: 10px; }
 
+        /* --- PROMO SLIDER CSS (UPDATED) --- */
+        .promo-slider-container { width: 100%; margin-bottom: 30px; margin-top: 10px; }
+        
+        .promo-slider {
+            display: flex;
+            overflow-x: auto;
+            gap: 15px;
+            padding-bottom: 10px;
+            scroll-snap-type: x mandatory;
+            scrollbar-width: none; /* Hide scrollbar Firefox */
+            scroll-behavior: smooth;
+        }
+        .promo-slider::-webkit-scrollbar { display: none; } /* Hide scrollbar Chrome */
+
+        .promo-slide {
+            min-width: 280px;
+            height: 150px;
+            border-radius: 20px;
+            overflow: hidden;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.15);
+            scroll-snap-align: center;
+            flex-shrink: 0;
+            position: relative;
+        }
+        
+        .promo-slide img { width: 100%; height: 100%; object-fit: cover; }
+
+        /* --- BUTTONS & LIST --- */
         .quick-actions { display: flex; justify-content: space-between; margin-bottom: 30px; }
         .action-btn { 
             display: flex; align-items: center; justify-content: center; 
             border: 2px solid #af094b; border-radius: 50px; padding: 12px 15px; 
             background: white; cursor: pointer; width: 30%; 
-            text-decoration: none; /* REMOVES UNDERLINE */
-            color: inherit; /* PREVENTS BLUE COLOR */
+            text-decoration: none; color: inherit; 
         }        
         .action-btn i { color: #af094b; font-size: 1.2rem; margin-right: 8px; }
         .action-btn span { font-weight: 700; font-size: 1rem; color: #888; }
@@ -70,7 +97,7 @@
         .chatbot-btn { position: absolute; bottom: 120px; right: 25px; width: 60px; height: 60px; background: transparent; border-radius: 50%; display: flex; align-items: center; justify-content: center;  z-index: 1000; cursor: pointer; border: 1.5px solid transparent; }
         .chatbot-btn i { font-size: 2rem; color: #af094b; }
 
-        /* --- BOTTOM NAV (UPDATED) --- */
+        /* --- BOTTOM NAV --- */
         .bottom-nav { position: absolute; bottom: 0; width: 100%; background: #fcebf4; display: flex; justify-content: space-around; padding: 15px 0; border-top-left-radius: 25px; border-top-right-radius: 25px; box-shadow: 0 -2px 10px rgba(0,0,0,0.1); z-index: 2000; }
         .nav-item { display: flex; flex-direction: column; align-items: center; text-decoration: none; color: #888; font-size: 0.8rem; font-weight: 600; position: relative; width: 20%; }
         .nav-item i { font-size: 1.5rem; margin-bottom: 5px; }
@@ -96,9 +123,6 @@
         .chat-input { flex-grow: 1; padding: 12px; border-radius: 20px; border: 1px solid #ccc; outline: none; background: #f5f5f5; }
         .btn-send { background: #af094b; color: white; border: none; width: 45px; height: 45px; border-radius: 50%; cursor: pointer; display: flex; align-items: center; justify-content: center; }
         .btn-live-agent { width: 100%; padding: 12px; border: 2px solid #af094b; border-radius: 50px; background: white; color: #af094b; font-weight: 700; cursor: pointer; display: flex; align-items: center; justify-content: center; gap: 8px; }
-      
-        .btn-pinned { width: 100%; padding: 20px; border-radius: 50px; border: none; background-color: #efc1da; font-size: 1.2rem; font-weight: 800; color: black; cursor: pointer; margin-top: 15px; }
-        .btn-pinned:hover { opacity: 0.9; }
 
     </style>
 </head>
@@ -123,26 +147,46 @@
                             <i class="fas fa-search" onclick="triggerSearch()"></i>
                             <input type="text" id="searchInput" class="search-input" placeholder="Search location (e.g. Pavilion)...">
                         </div>
-                            
                         </div>
                     </div>
 
                     <div class="content-area">
+                        
+                        <h2 class="section-title" style="margin-bottom:10px;">Special Offers</h2>
+                        <div class="promo-slider-container">
+                            <div class="promo-slider">
+                                <div class="promo-slide">
+                                    <img src="1.png" alt="Promo 1">
+                                </div>
+                                <div class="promo-slide">
+                                    <img src="2.png" alt="Promo 2">
+                                </div>
+                                <div class="promo-slide">
+                                    <img src="3.png" alt="Promo 3">
+                                </div>
+                                <div class="promo-slide">
+                                    <img src="4.png" alt="Promo 4">
+                                </div>
+                                <div class="promo-slide">
+                                    <img src="5.png" alt="Promo 5">
+                                </div>
+                              
+                            </div>
+                        </div>
+
                         <h2 class="section-title">My Address</h2>
 
                         <div class="quick-actions">
-                        <a href="set-address.html?type=home" class="action-btn">
-                            <i class="fas fa-home"></i><span>Home</span>
-                        </a>
-                        
-                        <a href="set-address.html?type=office" class="action-btn">
-                            <i class="fas fa-briefcase"></i><span>Office</span>
-                        </a>
-                        
-                        <a href="add-place.html" class="action-btn new-btn">
-                            <i class="fas fa-plus"></i><span>New</span>
-                        </a>
-                     </div>
+                            <a href="set-address.html?type=home" class="action-btn">
+                                <i class="fas fa-home"></i><span>Home</span>
+                            </a>
+                            <a href="set-address.html?type=office" class="action-btn">
+                                <i class="fas fa-briefcase"></i><span>Office</span>
+                            </a>
+                            <a href="add-place.html" class="action-btn new-btn">
+                                <i class="fas fa-plus"></i><span>New</span>
+                            </a>
+                        </div>
 
                         <div class="recent-section">
                             <h3>Recent</h3>
@@ -175,7 +219,7 @@
                         <div class="chat-input-area">
                             <button class="btn-live-agent" onclick="connectHuman()"><i class="fas fa-headset"></i> Chat with Real Person</button>
                             <div class="input-row"><input type="text" class="chat-input" placeholder="Type message..." id="userMessage"><button class="btn-send" onclick="sendMessage()"><i class="fas fa-paper-plane"></i></button></div>
-        
+                        </div>
                     </div>
                 </div>
             </div>
@@ -205,14 +249,9 @@
                 });
         }
 
-        function selectType(type, element) {
-            document.querySelectorAll('.address-item').forEach(item => item.classList.remove('selected'));
-            element.classList.add('selected');
-            selectedType = type;
-        }
-        
         function openchat() { document.getElementById('homeChatModal').classList.add('show'); }
         function closechat() { document.getElementById('homeChatModal').classList.remove('show'); }
+        
         function sendMessage() {
             const input = document.getElementById('userMessage'); if(!input.value.trim()) return;
             const body = document.getElementById('chatBody');
@@ -225,6 +264,23 @@
             body.innerHTML += `<div style='text-align:center; color:#888; font-size:0.8rem;'>Connecting...</div>`;
             setTimeout(() => { body.innerHTML += `<div class='chat-msg agent' style='border:2px solid #af094b'>Hi! Sarah here.</div>`; body.scrollTop = body.scrollHeight; }, 2000);
         }
+
+        // --- AUTO SLIDE SCRIPT ---
+        const slider = document.querySelector('.promo-slider');
+        
+        setInterval(() => {
+            // Width of card (280px) + Gap (15px) = 295px
+            const scrollAmount = 295; 
+            
+            // Check if we are at the end
+            if (slider.scrollLeft + slider.clientWidth >= slider.scrollWidth - 10) {
+                // If at end, loop back to start
+                slider.scrollTo({ top: 0, left: 0, behavior: 'smooth' });
+            } else {
+                // Else scroll right
+                slider.scrollBy({ top: 0, left: scrollAmount, behavior: 'smooth' });
+            }
+        }, 3000); // 3 Seconds
     </script>
 </body>
 </html>
