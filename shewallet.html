@@ -3,26 +3,28 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>SheWallet</title>
+    <title>SheWallet - Fully Functional</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     
     <style>
-        /* (Style yang sama macam di atas untuk Frame) */
+        /* --- BASE STYLES --- */
         * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; }
-        body { background-color: #e0e0e0; display: flex; justify-content: center; align-items: center; min-height: 100vh; overflow: hidden; }
+        body { background-color: #white; display: flex; justify-content: center; align-items: center; min-height: 100vh; overflow: hidden; }
         .mockup-wrapper { width: 100%; height: 100vh; display: flex; justify-content: center; align-items: center; }
-        .mockup-container { position: relative; width: 500px; height: 1020px; transform: scale(0.6); transform-origin: center center; background-image: url('mockup-iphone.png'); background-size: contain; background-repeat: no-repeat; background-position: center; }
+        .mockup-container { position: relative; width: 500px; height: 1020px; transform: scale(0.6); transform-origin: center center; ; background-size: contain; background-repeat: no-repeat; background-position: center; }
         .phone-screen { position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); width: 440px; height: 956px; border-radius: 55px; overflow: hidden; box-shadow: inset 0 0 20px rgba(0,0,0,0.2); }
         .dynamic-island { position: absolute; top: 20px; left: 50%; transform: translateX(-50%); width: 126px; height: 37px; background-color: #000; border-radius: 20px; z-index: 9999; }
 
-        /* CONTENT */
-        .screen-content { width: 100%; height: 100%; background-color: #fff; display: flex; flex-direction: column; position: relative; }
-        .content-scroll { flex-grow: 1; overflow-y: auto; padding-bottom: 120px; }
+        /* --- LAYOUT --- */
+        .screen-content { width: 100%; height: 100%; display: flex; flex-direction: column; position: relative; }
+        .content-scroll { flex-grow: 1; overflow-y: auto; padding-bottom: 120px; scroll-behavior: smooth; }
 
         .header { padding: 20px; padding-top: 60px; display: flex; align-items: center; justify-content: center; position: relative; }
-        .back-btn { position: absolute; left: 25px; font-size: 1.8rem; color: black; text-decoration: none; cursor: pointer; }
+        .back-btn { position: absolute; left: 25px; font-size: 1.8rem; color: black; text-decoration: none; cursor: pointer; transition: transform 0.2s; }
+        .back-btn:active { transform: scale(0.8); }
         .page-title { font-size: 1.8rem; font-weight: 800; color: #af094b; }
 
+        /* --- BALANCE & AMOUNT --- */
         .balance-card { background-color: #af094b; color: white; width: 90%; margin: 10px auto; padding: 25px 20px; border-radius: 15px; box-shadow: 0 5px 15px rgba(175, 9, 75, 0.2); }
         .balance-label { font-size: 1rem; font-weight: 600; opacity: 0.9; }
         .balance-amount { font-size: 2.5rem; font-weight: 800; margin-top: 5px; }
@@ -30,52 +32,84 @@
         .section-title { font-size: 1.2rem; font-weight: 800; color: black; margin: 25px 20px 15px 20px; }
         .amount-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 15px; padding: 0 20px; margin-bottom: 15px; }
         .amount-btn { border: 2px solid #af094b; background: white; color: #af094b; border-radius: 15px; padding: 20px 0; font-size: 1.2rem; font-weight: 700; cursor: pointer; transition: all 0.2s; }
-        .amount-btn.active { background-color: #af094b; color: white; }
+        .amount-btn:active { transform: scale(0.95); }
+        .amount-btn.active { background-color: #af094b; color: white; transform: scale(1.05); }
 
         .custom-amount-wrapper { width: 90%; margin: 0 auto 30px auto; position: relative; height: 60px; }
-        .custom-amount-btn { width: 100%; height: 100%; display: flex; align-items: center; justify-content: center; border: 2px solid #af094b; border-radius: 15px; background: white; color: #af094b; font-weight: 800; font-size: 1.1rem; cursor: pointer; position: absolute; top: 0; left: 0; z-index: 2; }
-        .custom-input-real { width: 100%; height: 100%; position: absolute; top: 0; left: 0; z-index: 1; border: 2px solid #af094b; border-radius: 15px; padding: 0 20px; font-size: 1.2rem; font-weight: 800; color: #af094b; text-align: center; background: white; outline: none; opacity: 0; pointer-events: none; }
-        .custom-input-real.active { opacity: 1; pointer-events: auto; z-index: 3; background-color: #fff0f5; }
+        .custom-amount-btn { width: 100%; height: 100%; display: flex; align-items: center; justify-content: center; border: 2px solid #af094b; border-radius: 15px; background: white; color: #af094b; font-weight: 800; font-size: 1.1rem; cursor: pointer; position: absolute; top: 0; left: 0; z-index: 2; transition: opacity 0.2s; }
+        .custom-amount-btn.hidden { opacity: 0; pointer-events: none; }
+        .custom-input-real { width: 100%; height: 100%; position: absolute; top: 0; left: 0; z-index: 1; border: 2px solid #af094b; border-radius: 15px; padding: 0 20px; font-size: 1.2rem; font-weight: 800; color: #af094b; text-align: center; background: white; outline: none; opacity: 0; transition: opacity 0.2s; }
+        .custom-input-real.active { opacity: 1; z-index: 3; background-color: #fff0f5; }
 
-        /* PAYMENT LIST STYLES */
-        .payment-list { padding: 0 20px; margin-top: 10px; }
-        .payment-item { display: flex; align-items: center; justify-content: space-between; padding: 15px 0; border-bottom: 1px solid #eee; cursor: pointer; transition: background 0.2s; }
-        .payment-item:active { background-color: #fcebf4; }
-        .pay-left { display: flex; align-items: center; font-weight: 700; font-size: 1rem; }
-        .pay-icon { width: 35px; margin-right: 10px; font-size: 1.5rem; text-align: center; color: #af094b; }
+        /* --- PAYMENT LIST --- */
+        .payment-list { padding: 0 20px; margin-top: 10px; display: flex; flex-direction: column; gap: 12px; }
+        .pay-option { display: flex; align-items: center; justify-content: space-between; padding: 18px; border-radius: 18px; border: 2px solid #eee; cursor: pointer; transition: all 0.2s ease; }
+        .pay-option.selected { border-color: #af094b; background-color: #fff0f5; }
+        .pay-option:active { transform: scale(0.98); }
+        .pay-left { display: flex; align-items: center; gap: 15px; }
+        .pay-icon-box { width: 45px; height: 45px; background: #f8f8f8; border-radius: 10px; display: flex; align-items: center; justify-content: center; font-size: 1.4rem; }
+        .pay-text { display: flex; flex-direction: column; }
+        .pay-title { font-weight: 700; font-size: 1rem; color: #333; }
+        .pay-sub { font-size: 0.8rem; color: #888; }
+        .select-circle { width: 22px; height: 22px; border-radius: 50%; border: 2px solid #ccc; display: flex; align-items: center; justify-content: center; }
+        .pay-option.selected .select-circle { border-color: #af094b; background: #af094b; }
+        .pay-option.selected .select-circle::after { content: '\f00c'; font-family: "Font Awesome 5 Free"; font-weight: 900; color: white; font-size: 0.7rem; }
         
-        .btn-proceed { width: 90%; margin: 20px auto 40px auto; padding: 20px; border-radius: 50px; border: none; background-color: #af094b; color: white; font-size: 1.3rem; font-weight: 800; cursor: pointer; box-shadow: 0 5px 15px rgba(0,0,0,0.2); display: block; }
-        .btn-proceed.success { background-color: #28a745; pointer-events: none; }
+        .add-new-btn { border: 2px dashed #af094b; background: transparent; display: flex; align-items: center; justify-content: center; padding: 15px; border-radius: 18px; color: #af094b; font-weight: 700; gap: 10px; cursor: pointer; }
+        .add-new-btn:active { background: #fff0f5; }
 
-        /* Chatbot Button (Fixed Positioning) */
-        .chatbot-btn { position: absolute; bottom: 120px; right: 25px; width: 60px; height: 60px; background: transparent; border-radius: 50%; display: flex; align-items: center; justify-content: center; z-index: 1000; cursor: pointer; }
+        /* Brand Colors */
+        .brand-apple { color: black; }
+        .brand-visa { color: #1a1f71; }
+        .brand-tng { color: #005eb8; }
 
-        /* NAV */
+        .btn-proceed { width: 90%; margin: 30px auto 40px auto; padding: 20px; border-radius: 50px; border: none; background-color: #af094b; color: white; font-size: 1.3rem; font-weight: 800; cursor: pointer; box-shadow: 0 5px 15px rgba(0,0,0,0.2); display: flex; align-items: center; justify-content: center; gap: 10px; transition: background 0.3s; }
+        .btn-proceed:disabled { background-color: #d1d1d1; cursor: not-allowed; }
+        
+        /* --- BOTTOM NAV --- */
         .bottom-nav { position: absolute; bottom: 0; width: 100%; background: #fcebf4; display: flex; justify-content: space-around; padding: 15px 0; border-top-left-radius: 25px; border-top-right-radius: 25px; box-shadow: 0 -2px 10px rgba(0,0,0,0.1); z-index: 2000; }
-        .nav-item { display: flex; flex-direction: column; align-items: center; text-decoration: none; color: #888; font-size: 0.8rem; font-weight: 600; position: relative; width: 20%; }
+        .nav-item { display: flex; flex-direction: column; align-items: center; text-decoration: none; color: #888; font-size: 0.8rem; font-weight: 600; position: relative; width: 20%; cursor: pointer; }
         .nav-item i { font-size: 1.5rem; margin-bottom: 5px; }
         .nav-item.active { color: #af094b; }
         .nav-item.wallet-item { color: #af094b; margin-top: -35px; }
         .wallet-circle { background: #af094b; width: 60px; height: 60px; border-radius: 50%; display: flex; align-items: center; justify-content: center; color: white; border: 5px solid white; margin-bottom: 5px; }
         .badge { position: absolute; top: -5px; right: 15px; background: #af094b; color: white; font-size: 0.7rem; padding: 3px 6px; border-radius: 10px; border: 2px solid white; }
 
-        /* Modal Chat Styles */
-        .modal-overlay { position: absolute; bottom: 0; left: 0; width: 100%; height: 85%; background: white; border-top-left-radius: 25px; border-top-right-radius: 25px; box-shadow: 0 -5px 25px rgba(0,0,0,0.3); z-index: 3000; transform: translateY(110%); transition: transform 0.3s ease; display: flex; flex-direction: column; }
-        .modal-overlay.show { transform: translateY(0); }
+        /* --- CHATBOT --- */
+        .chatbot-btn { position: absolute; bottom: 120px; right: 25px; width: 60px; height: 60px; background: transparent; border-radius: 50%; display: flex; align-items: center; justify-content: center; z-index: 1000; cursor: pointer; transition: transform 0.2s; }
+        .chatbot-btn:active { transform: scale(0.9); }
+        .chat-modal { position: absolute; bottom: 0; left: 0; width: 100%; height: 85%; background: white; border-top-left-radius: 25px; border-top-right-radius: 25px; box-shadow: 0 -5px 25px rgba(0,0,0,0.3); z-index: 3000; transform: translateY(110%); transition: transform 0.3s ease; display: flex; flex-direction: column; }
+        .chat-modal.show { transform: translateY(0); }
         .chat-header { background: #af094b; color: white; padding: 20px; border-top-left-radius: 25px; border-top-right-radius: 25px; display: flex; justify-content: space-between; align-items: center; font-weight: bold; font-size: 1.1rem; }
-        .robot-showcase { display: flex; align-items: center; justify-content: center; padding: 20px; background: #fdf2f8; border-bottom: 1px solid #eee; gap: 15px; }
-        .robot-circle { width: 70px; height: 70px; background: white; border-radius: 50%; display: flex; align-items: center; justify-content: center; border: 3px solid #af094b; font-size: 2.5rem; color: #af094b; }
-        .robot-bubble { background: #00aaff; color: white; padding: 10px 15px; border-radius: 15px; border-bottom-left-radius: 0; font-size: 0.9rem; font-weight: 600; max-width: 180px; position: relative; }
-        .robot-bubble::after { content: ''; position: absolute; bottom: -8px; left: 0; border-width: 10px 10px 0; border-style: solid; border-color: #00aaff transparent; display: block; width: 0; }
         .chat-body { flex-grow: 1; padding: 20px; background: white; overflow-y: auto; display: flex; flex-direction: column; gap: 10px; }
-        .chat-msg { padding: 12px 18px; border-radius: 15px; max-width: 80%; font-size: 0.95rem; }
-        .chat-msg.user { background: #ddd; color: black; border-bottom-right-radius: 0; align-self: flex-end; }
-        .chat-msg.agent { background: #efc1da; color: black; border-bottom-left-radius: 0; align-self: flex-start; }
-        .chat-input-area { padding: 20px; border-top: 1px solid #ddd; display: flex; flex-direction: column; gap: 10px; background: #fff; }
-        .input-row { display: flex; gap: 10px; }
-        .chat-input { flex-grow: 1; padding: 12px; border-radius: 20px; border: 1px solid #ccc; outline: none; background: #f5f5f5; }
-        .btn-send { background: #af094b; color: white; border: none; width: 45px; height: 45px; border-radius: 50%; cursor: pointer; display: flex; align-items: center; justify-content: center; }
-        .btn-live-agent { width: 100%; padding: 12px; border: 2px solid #af094b; border-radius: 50px; background: white; color: #af094b; font-weight: 700; cursor: pointer; display: flex; align-items: center; justify-content: center; gap: 8px; }
+        .chat-input-area { padding: 20px; border-top: 1px solid #ddd; display: flex; gap: 10px; background: #fff; }
+        .chat-msg { padding: 10px 15px; border-radius: 15px; max-width: 80%; font-size: 0.9rem; }
+        .chat-msg.user { background: #ddd; align-self: flex-end; border-bottom-right-radius: 0; }
+        .chat-msg.agent { background: #efc1da; align-self: flex-start; border-bottom-left-radius: 0; }
+
+        /* --- ADD CARD MODAL --- */
+        .add-card-modal { position: absolute; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.5); z-index: 4000; display: none; align-items: flex-end; }
+        .add-card-modal.show { display: flex; }
+        .card-form-container { width: 100%; background: white; border-top-left-radius: 30px; border-top-right-radius: 30px; padding: 30px; animation: slideUp 0.3s ease; }
+        @keyframes slideUp { from { transform: translateY(100%); } to { transform: translateY(0); } }
+        .form-input { width: 100%; padding: 15px; border: 1px solid #ddd; border-radius: 15px; margin-bottom: 15px; font-size: 1rem; background: #f9f9f9; }
+        .form-row { display: flex; gap: 15px; }
+        .btn-save-card { width: 100%; padding: 15px; background: #af094b; color: white; font-weight: bold; border: none; border-radius: 15px; font-size: 1.1rem; cursor: pointer; }
+
+        /* --- RECEIPT SUCCESS MODAL --- */
+        .receipt-modal { position: absolute; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.7); z-index: 5000; display: none; justify-content: center; align-items: center; }
+        .receipt-modal.show { display: flex; }
+        .receipt-card { width: 85%; background: white; border-radius: 20px; padding: 30px; text-align: center; position: relative; animation: popIn 0.3s; }
+        @keyframes popIn { from { transform: scale(0.8); opacity: 0; } to { transform: scale(1); opacity: 1; } }
+        .success-icon { width: 80px; height: 80px; background: #28a745; color: white; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 2.5rem; margin: 0 auto 20px auto; }
+        .receipt-amount { font-size: 2rem; font-weight: 800; color: #af094b; margin: 10px 0; }
+        .receipt-detail { color: #777; font-size: 0.9rem; margin-bottom: 20px; }
+        .btn-close-receipt { width: 100%; padding: 15px; background: #af094b; color: white; border: none; border-radius: 50px; font-weight: bold; font-size: 1rem; cursor: pointer; }
+
+        /* --- TOAST NOTIFICATION --- */
+        .toast { position: absolute; bottom: 100px; left: 50%; transform: translateX(-50%); background: rgba(0,0,0,0.8); color: white; padding: 12px 25px; border-radius: 30px; font-size: 0.9rem; pointer-events: none; opacity: 0; transition: opacity 0.3s; z-index: 6000; white-space: nowrap; }
+        .toast.show { opacity: 1; }
+
     </style>
 </head>
 <body>
@@ -83,9 +117,10 @@
         <div class="mockup-container">
             <div class="phone-screen">
                 <div class="dynamic-island"></div>
+                
                 <div class="screen-content">
                     <div class="header">
-                        <a href="home.html" class="back-btn"><i class="fas fa-arrow-left"></i></a>
+                        <div class="back-btn" onclick="fakeNav('Home')"><i class="fas fa-arrow-left"></i></div>
                         <div class="page-title">SheWallet</div>
                     </div>
 
@@ -95,100 +130,283 @@
                             <div class="balance-amount" id="displayBalance">RM 52.90</div>
                         </div>
 
-                        <div class="section-title">Select Amount:</div>
+                        <div class="section-title">1. Select Amount:</div>
                         <div class="amount-grid">
                             <button class="amount-btn" onclick="selectFixedAmount(10, this)">RM10</button>
                             <button class="amount-btn" onclick="selectFixedAmount(20, this)">RM20</button>
                             <button class="amount-btn" onclick="selectFixedAmount(30, this)">RM30</button>
-                            <button class="amount-btn" onclick="selectFixedAmount(40, this)">RM40</button>
                             <button class="amount-btn" onclick="selectFixedAmount(50, this)">RM50</button>
                             <button class="amount-btn" onclick="selectFixedAmount(100, this)">RM100</button>
+                            <button class="amount-btn" onclick="selectFixedAmount(200, this)">RM200</button>
                         </div>
 
                         <div class="custom-amount-wrapper">
-                            <div class="custom-amount-btn" id="customFakeBtn" onclick="activateInput()">
-                                <i class="fas fa-pencil-alt"></i> Custom Amount
-                            </div>
+                            <div class="custom-amount-btn" id="customFakeBtn" onclick="activateInput()"><i class="fas fa-pencil-alt"></i> &nbsp; Custom Amount</div>
                             <input type="number" id="customInput" class="custom-input-real" placeholder="Enter Amount (RM)" onblur="checkInput()">
                         </div>
 
-                        <div class="section-title">Payment Method:</div>
-                        <div class="payment-list">
-                           <div class="payment-item" onclick="window.location.href='setup-apple-pay.html'">
-                            <div class="pay-left"><i class="fab fa-apple pay-icon"></i> Apple Pay</div>
-                            <i class="fas fa-chevron-right arrow-icon"></i>
-                        </div>
-                                                    
-                            <div class="payment-item" onclick="window.location.href='add-card.html'">
-                                <div class="pay-left"><i class="fas fa-plus pay-icon"></i> Add Debit / Credit Card</div>
-                                <i class="fas fa-chevron-right arrow-icon"></i>
-                            </div>
+                        <div class="section-title">2. Payment Method:</div>
+                        <div class="payment-list" id="paymentContainer">
                             
-                            <div class="payment-item" onclick="window.location.href='setup-fpx.html'">
-                                <div class="pay-left"><i class="fas fa-university pay-icon"></i> FPX / Online Banking</div>
-                                <i class="fas fa-chevron-right arrow-icon"></i>
+                            <div class="pay-option" onclick="selectPayment(this, 'visa')">
+                                <div class="pay-left">
+                                    <div class="pay-icon-box"><i class="fab fa-cc-visa brand-visa"></i></div>
+                                    <div class="pay-text">
+                                        <span class="pay-title">Maybank Visa</span>
+                                        <span class="pay-sub">**** 8888</span>
+                                    </div>
+                                </div>
+                                <div class="select-circle"></div>
+                            </div>
+
+                            <div class="pay-option" onclick="selectPayment(this, 'apple')">
+                                <div class="pay-left">
+                                    <div class="pay-icon-box"><i class="fab fa-apple brand-apple"></i></div>
+                                    <div class="pay-text">
+                                        <span class="pay-title">Apple Pay</span>
+                                        <span class="pay-sub">Biometric Security</span>
+                                    </div>
+                                </div>
+                                <div class="select-circle"></div>
+                            </div>
+
+                            <div class="pay-option" onclick="selectPayment(this, 'tng')">
+                                <div class="pay-left">
+                                    <div class="pay-icon-box"><i class="fas fa-wallet brand-tng"></i></div>
+                                    <div class="pay-text">
+                                        <span class="pay-title">Touch 'n Go eWallet</span>
+                                        <span class="pay-sub">Redirect to App</span>
+                                    </div>
+                                </div>
+                                <div class="select-circle"></div>
+                            </div>
+
+                            <div class="add-new-btn" onclick="openAddCard()">
+                                <i class="fas fa-plus"></i> Add New Card
                             </div>
                         </div>
 
-                        <button class="btn-proceed" id="proceedBtn" onclick="proceedTopup()">Proceed to Topup</button>
+                        <button class="btn-proceed" id="proceedBtn" onclick="proceedTopup()">
+                            <span id="btnText">Proceed to Topup</span>
+                        </button>
                     </div>
 
-                    <div class="chatbot-btn" onclick="openChat()">
-                        <img src="shego-assistant.png" style="width: 180px; background-color: transparent;">
+                    <div class="chatbot-btn" onclick="toggleChat(true)">
+                        <img src="shego-assistant.png" style="width: 180px;" alt="Chat">
                     </div>
 
                     <div class="bottom-nav">
-                        <a href="home.html" class="nav-item"><i class="fas fa-home"></i>Home</a>
-                        <a href="select-ride.html" class="nav-item"><i class="fas fa-map-marker-alt"></i>Trips</a>
-                        <a href="shewallet.html" class="nav-item wallet-item active"><div class="wallet-circle"><i class="fas fa-wallet"></i></div>SheWallet</a>
-                        <a href="notifications.html" class="nav-item"><i class="fas fa-bell"></i><span class="badge">10</span>Notifications</a>
-                        <a href="profile.html" class="nav-item"><i class="far fa-user-circle"></i>Profile</a>
-                    </div>
-
-                    <div class="modal-overlay" id="walletChatModal">
-                        <div class="chat-header"><span>SheGO Assistant</span><i class="fas fa-times" style="cursor:pointer;" onclick="closeChat()"></i></div>
-                        <div class="robot-showcase"><div class="robot-circle"><i class="fas fa-robot"></i></div><div class="robot-bubble">Hello! Need help with top-up?</div></div>
-                        <div class="chat-body" id="chatBody"></div>
-                        <div class="chat-input-area">
-                            <button class="btn-live-agent" onclick="connectHuman()"><i class="fas fa-headset"></i> Chat with Real Person</button>
-                            <div class="input-row"><input type="text" class="chat-input" placeholder="Type message..." id="userMessage"><button class="btn-send" onclick="sendMessage()"><i class="fas fa-paper-plane"></i></button></div>
-                        </div>
+                        <div class="nav-item" onclick="fakeNav('Home')"><i class="fas fa-home"></i>Home</div>
+                        <div class="nav-item" onclick="fakeNav('Trips')"><i class="fas fa-map-marker-alt"></i>Trips</div>
+                        <div class="nav-item wallet-item active"><div class="wallet-circle"><i class="fas fa-wallet"></i></div>SheWallet</div>
+                        <div class="nav-item" onclick="fakeNav('Notifications')"><i class="fas fa-bell"></i><span class="badge">12</span>Alerts</div>
+                        <div class="nav-item" onclick="fakeNav('Profile')"><i class="far fa-user-circle"></i>Profile</div>
                     </div>
                 </div>
+
+                <div class="chat-modal" id="chatModal">
+                    <div class="chat-header"><span>SheGO Support</span><i class="fas fa-times" style="cursor:pointer;" onclick="toggleChat(false)"></i></div>
+                    <div class="chat-body" id="chatBody">
+                        <div class="chat-msg agent">Hi! Need help with payment?</div>
+                    </div>
+                    <div class="chat-input-area">
+                        <input type="text" id="chatInput" style="flex:1; padding:10px; border-radius:20px; border:1px solid #ddd;" placeholder="Type here...">
+                        <button onclick="sendChat()" style="background:#af094b; color:white; border:none; width:40px; height:40px; border-radius:50%;"><i class="fas fa-paper-plane"></i></button>
+                    </div>
+                </div>
+
+                <div class="add-card-modal" id="addCardModal">
+                    <div class="card-form-container">
+                        <h2 style="margin-bottom:20px; color:#af094b;">Add New Card</h2>
+                        <input type="text" class="form-input" placeholder="Card Number (0000 0000 0000 0000)">
+                        <div class="form-row">
+                            <input type="text" class="form-input" placeholder="MM/YY">
+                            <input type="text" class="form-input" placeholder="CVV">
+                        </div>
+                        <button class="btn-save-card" onclick="saveNewCard()">Save Card</button>
+                        <div style="text-align:center; margin-top:15px; color:#888; cursor:pointer;" onclick="closeAddCard()">Cancel</div>
+                    </div>
+                </div>
+
+                <div class="receipt-modal" id="receiptModal">
+                    <div class="receipt-card">
+                        <div class="success-icon"><i class="fas fa-check"></i></div>
+                        <h3 style="color:#333;">Payment Successful!</h3>
+                        <div class="receipt-amount" id="receiptAmount">RM 0.00</div>
+                        <div class="receipt-detail" id="receiptDate"></div>
+                        <p style="color:#888; font-size:0.8rem; margin-bottom:20px;">Ref: #SHE99283712</p>
+                        <button class="btn-close-receipt" onclick="closeReceipt()">Done</button>
+                    </div>
+                </div>
+
+                <div class="toast" id="toastMsg">Navigating...</div>
+
             </div>
         </div>
     </div>
 
     <script>
-        let currentBalance = 52.90; let selectedTopup = 0;
-        function selectFixedAmount(amount, btn) { selectedTopup = amount; document.querySelectorAll('.amount-btn').forEach(b => b.classList.remove('active')); btn.classList.add('active'); document.getElementById('customInput').classList.remove('active'); document.getElementById('customInput').value = ''; }
-        function activateInput() { document.querySelectorAll('.amount-btn').forEach(b => b.classList.remove('active')); selectedTopup = 0; const input = document.getElementById('customInput'); input.classList.add('active'); input.focus(); }
-        function checkInput() { const input = document.getElementById('customInput'); if(input.value === '' || input.value <= 0) { input.classList.remove('active'); } else { selectedTopup = parseFloat(input.value); } }
-        
-        function proceedTopup() {
-            const input = document.getElementById('customInput'); if(input.classList.contains('active') && input.value > 0) { selectedTopup = parseFloat(input.value); }
-            if (selectedTopup <= 0) { alert("Please select topup amount!"); return; }
-            const btn = document.getElementById('proceedBtn'); const originalText = "Proceed to Topup"; btn.innerText = "Processing...";
-            setTimeout(() => { currentBalance += selectedTopup; document.getElementById('displayBalance').innerText = "RM " + currentBalance.toFixed(2); btn.innerText = "Topup Successful!"; btn.classList.add('success'); setTimeout(() => { btn.innerText = originalText; btn.classList.remove('success'); selectedTopup = 0; document.querySelectorAll('.amount-btn').forEach(b => b.classList.remove('active')); input.value = ''; input.classList.remove('active'); }, 2000); }, 1500);
+        let currentBalance = 52.90; 
+        let selectedTopupAmount = 0;
+        let selectedPaymentMethod = null;
+
+        // --- NAVIGATION SIMULATION ---
+        function fakeNav(pageName) {
+            const toast = document.getElementById('toastMsg');
+            toast.textContent = `Navigating to ${pageName}...`;
+            toast.classList.add('show');
+            setTimeout(() => toast.classList.remove('show'), 2000);
         }
 
-        // --- FIXED CHAT FUNCTIONS ---
-        function openChat() { document.getElementById('walletChatModal').classList.add('show'); }
-        function closeChat() { document.getElementById('walletChatModal').classList.remove('show'); }
-        
-        function sendMessage() { 
-            const input = document.getElementById('userMessage'); const msg = input.value; 
-            if(!msg) return; 
-            const body = document.getElementById('chatBody'); 
-            body.innerHTML += `<div class='chat-msg user'>${msg}</div>`; 
-            input.value = ''; body.scrollTop = body.scrollHeight; 
-            setTimeout(() => { body.innerHTML += `<div class='chat-msg agent'>I'm checking that for you.</div>`; body.scrollTop = body.scrollHeight; }, 1000); 
+        // --- AMOUNT LOGIC ---
+        function selectFixedAmount(amount, btn) {
+            resetInput();
+            selectedTopupAmount = amount;
+            document.querySelectorAll('.amount-btn').forEach(b => b.classList.remove('active'));
+            btn.classList.add('active');
         }
+
+        function activateInput() {
+            document.querySelectorAll('.amount-btn').forEach(b => b.classList.remove('active'));
+            selectedTopupAmount = 0;
+            document.getElementById('customFakeBtn').classList.add('hidden');
+            const input = document.getElementById('customInput');
+            input.classList.add('active');
+            input.focus();
+        }
+
+        function resetInput() {
+            const input = document.getElementById('customInput');
+            input.value = '';
+            input.classList.remove('active');
+            document.getElementById('customFakeBtn').classList.remove('hidden');
+        }
+
+        function checkInput() {
+            const input = document.getElementById('customInput');
+            if(input.value === '' || input.value <= 0) {
+                resetInput();
+                selectedTopupAmount = 0;
+            } else {
+                selectedTopupAmount = parseFloat(input.value);
+            }
+        }
+
+        // --- PAYMENT LOGIC ---
+        function selectPayment(element, method) {
+            document.querySelectorAll('.pay-option').forEach(el => el.classList.remove('selected'));
+            element.classList.add('selected');
+            selectedPaymentMethod = method;
+        }
+
+        // --- ADD CARD LOGIC ---
+        function openAddCard() { document.getElementById('addCardModal').classList.add('show'); }
+        function closeAddCard() { document.getElementById('addCardModal').classList.remove('show'); }
         
-        function connectHuman() { 
-            const body = document.getElementById('chatBody'); 
-            body.innerHTML += `<div style='text-align:center; color:#888; font-size:0.8rem;'>Connecting...</div>`; 
-            setTimeout(() => { body.innerHTML += `<div class='chat-msg agent' style='border:2px solid #af094b'>Hi! Sarah here.</div>`; body.scrollTop = body.scrollHeight; }, 2000); 
+        function saveNewCard() {
+            // Fake Save Logic
+            const list = document.getElementById('paymentContainer');
+            const newCardHTML = `
+                <div class="pay-option selected" onclick="selectPayment(this, 'newCard')">
+                    <div class="pay-left">
+                        <div class="pay-icon-box" style="background:#e3f2fd; color:#1565c0;"><i class="fab fa-cc-mastercard"></i></div>
+                        <div class="pay-text">
+                            <span class="pay-title">Mastercard</span>
+                            <span class="pay-sub">**** 4242</span>
+                        </div>
+                    </div>
+                    <div class="select-circle"></div>
+                </div>
+            `;
+            
+            // Remove selection from others
+            document.querySelectorAll('.pay-option').forEach(el => el.classList.remove('selected'));
+            selectedPaymentMethod = 'newCard';
+            
+            // Insert new card before the "Add New" button
+            const addBtn = document.querySelector('.add-new-btn');
+            addBtn.insertAdjacentHTML('beforebegin', newCardHTML);
+            
+            closeAddCard();
+            
+            // Show Success Toast
+            const toast = document.getElementById('toastMsg');
+            toast.textContent = "Card Added Successfully!";
+            toast.classList.add('show');
+            setTimeout(() => toast.classList.remove('show'), 2000);
+        }
+
+        // --- PROCEED TOPUP ---
+        function proceedTopup() {
+            // Catch custom input if user didn't blur
+            const input = document.getElementById('customInput');
+            if(input.classList.contains('active') && input.value > 0) { selectedTopupAmount = parseFloat(input.value); }
+
+            if (!selectedTopupAmount || selectedTopupAmount <= 0) { alert("⚠️ Select amount first!"); return; }
+            if (!selectedPaymentMethod) { alert("⚠️ Select payment method!"); return; }
+
+            const btn = document.getElementById('proceedBtn');
+            const btnText = document.getElementById('btnText');
+            
+            // Loading State
+            btn.disabled = true;
+            
+            let loadingText = "Processing...";
+            if(selectedPaymentMethod === 'tng') loadingText = "Connecting TNG...";
+            if(selectedPaymentMethod === 'apple') loadingText = "Face ID...";
+            
+            btnText.innerHTML = `<i class="fas fa-spinner fa-spin"></i> ${loadingText}`;
+
+            setTimeout(() => {
+                // Success Logic
+                currentBalance += selectedTopupAmount;
+                document.getElementById('displayBalance').innerText = "RM " + currentBalance.toFixed(2);
+                
+                // Show Receipt Modal
+                document.getElementById('receiptAmount').innerText = "RM " + selectedTopupAmount.toFixed(2);
+                document.getElementById('receiptDate').innerText = new Date().toLocaleString();
+                document.getElementById('receiptModal').classList.add('show');
+
+                // Reset Button
+                btn.className = "btn-proceed";
+                btnText.innerText = "Proceed to Topup";
+                btn.disabled = false;
+                
+            }, 2000);
+        }
+
+        function closeReceipt() {
+            document.getElementById('receiptModal').classList.remove('show');
+            // Reset Selections
+            selectedTopupAmount = 0;
+            selectedPaymentMethod = null;
+            document.querySelectorAll('.amount-btn').forEach(b => b.classList.remove('active'));
+            document.querySelectorAll('.pay-option').forEach(el => el.classList.remove('selected'));
+            resetInput();
+        }
+
+        // --- CHATBOT ---
+        function toggleChat(show) {
+            const modal = document.getElementById('chatModal');
+            if(show) modal.classList.add('show');
+            else modal.classList.remove('show');
+        }
+
+        function sendChat() {
+            const input = document.getElementById('chatInput');
+            const body = document.getElementById('chatBody');
+            if(!input.value) return;
+
+            // User msg
+            body.innerHTML += `<div class="chat-msg user">${input.value}</div>`;
+            input.value = '';
+            body.scrollTop = body.scrollHeight;
+
+            // Bot reply simulation
+            setTimeout(() => {
+                body.innerHTML += `<div class="chat-msg agent">I'm a demo bot. Try topping up your wallet!</div>`;
+                body.scrollTop = body.scrollHeight;
+            }, 1000);
         }
     </script>
 </body>

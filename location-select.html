@@ -92,25 +92,68 @@
 
     <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
     <script>
+        // 1. SETUP MAP (Centered on KL)
         var map = L.map('map', { zoomControl: false }).setView([3.1478, 101.713], 15);
-        L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', { attribution: '© OpenStreetMap' }).addTo(map);
+        L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', { 
+            attribution: '© OpenStreetMap',
+            maxZoom: 19 
+        }).addTo(map);
+        
         setTimeout(function(){ map.invalidateSize(); }, 500);
 
         let selectedType = null;
         let currentSearchName = "Unknown Location";
         const searchInput = document.getElementById('searchInput');
-        searchInput.addEventListener("keypress", function(e) { if (e.key === "Enter") triggerSearch(); });
+        const searchIcon = document.querySelector('.search-pill i');
 
-        function triggerSearch() {
-            const query = searchInput.value; if (!query) return;
-            fetch(`https://nominatim.openstreetmap.org/search?format=json&q=${query}&limit=1`)
-                .then(r => r.json()).then(data => {
-                    if (data.length > 0) {
-                        currentSearchName = data[0].display_name.split(',')[0];
-                        map.flyTo([data[0].lat, data[0].lon], 16);
-                        searchInput.blur(); 
-                    } else { alert("Location not found!"); }
-                });
+        // Listen for "Enter" key
+        searchInput.addEventListener("keypress", function(e) { 
+            if (e.key === "Enter") triggerSearch(); 
+        });
+
+        async function triggerSearch() {
+            const query = searchInput.value; 
+            if (!query) return;
+
+            // UI: Show loading
+            searchIcon.className = "fas fa-spinner fa-spin"; 
+            searchInput.placeholder = "Searching...";
+            searchInput.disabled = true;
+
+            try {
+                // 2. THE "CHEAT": USING PHOTON API (Komoot)
+                // It is free, requires no key, and is smarter than standard OSM.
+                // lat=3.14&lon=101.71 -> We tell it to prioritize results near KL
+                const response = await fetch(`https://photon.komoot.io/api/?q=${encodeURIComponent(query)}&lat=3.14&lon=101.71&limit=5`);
+                const data = await response.json();
+
+                if (data.features.length > 0) {
+                    const result = data.features[0];
+                    const coords = result.geometry.coordinates; // Photon gives [lon, lat]
+                    
+                    // Get the name (Shop name or Street name)
+                    currentSearchName = result.properties.name || result.properties.street || "Pinned Location";
+                    
+                    // Photon uses [Lon, Lat], Leaflet uses [Lat, Lon] - So we flip them
+                    map.flyTo([coords[1], coords[0]], 17, {
+                        animate: true,
+                        duration: 1.5
+                    });
+
+                    searchInput.value = currentSearchName;
+                } else {
+                    alert("Location not found! Try a more specific name.");
+                }
+            } catch (error) {
+                console.error("Search error:", error);
+                alert("Network error. Please try again.");
+            } finally {
+                // Reset UI
+                searchIcon.className = "fas fa-search";
+                searchInput.placeholder = "Search location (e.g. Pavilion)...";
+                searchInput.disabled = false;
+                searchInput.blur();
+            }
         }
 
         function selectType(type, element) {
@@ -121,7 +164,9 @@
 
         function saveLocation() {
             if (!selectedType) { alert("Please select Home, Office, or Others first!"); return; }
-            if (!searchInput.value && currentSearchName === "Unknown Location") { currentSearchName = "Pinned Location"; }
+            if(searchInput.value && currentSearchName === "Unknown Location") {
+                currentSearchName = searchInput.value;
+            }
             
             const detailText = document.getElementById(`detail-${selectedType}`);
             detailText.textContent = currentSearchName;
